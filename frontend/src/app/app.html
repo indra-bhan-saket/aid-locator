@@ -1,0 +1,166 @@
+<div class="app-container">
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+      <div class="navbar-brand d-flex align-items-center">
+        <div class="location-icon me-2">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#000"/>
+          </svg>
+        </div>
+        <span class="brand-text">Aid Locator</span>
+      </div>
+      
+      <!-- Mobile menu button -->
+      <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <!-- Navigation items -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav ms-auto d-flex align-items-center">
+          <button class="btn btn-outline-secondary me-2 mb-2 mb-lg-0" (click)="checkHealth()">
+            Health Check
+          </button>
+          <button class="btn btn-dark login-btn">
+            Login
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-wrapper">
+    <div class="container">
+      <!-- Health Check Results -->
+      @if (healthResult) {
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+          <h5 class="alert-heading">Health Check Result:</h5>
+          <pre class="mb-0">{{ healthResult | json }}</pre>
+          <button type="button" class="btn-close" (click)="clearHealthResult()" aria-label="Close"></button>
+        </div>
+      }
+      
+      @if (healthError) {
+        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+          <h5 class="alert-heading">Health Check Error:</h5>
+          <p class="mb-0">{{ healthError }}</p>
+          <button type="button" class="btn-close" (click)="clearHealthResult()" aria-label="Close"></button>
+        </div>
+      }
+      
+      @if (isLoading) {
+        <div class="alert alert-info mt-3" role="alert">
+          <div class="d-flex align-items-center">
+            <div class="spinner-border spinner-border-sm me-2" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <span>Checking health status...</span>
+          </div>
+        </div>
+      }
+
+      <!-- Filter Services Section -->
+      <div class="filter-section mt-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <!-- Header with title and clear all button -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <div>
+                <h5 class="card-title mb-1 fw-bold">Filter Services</h5>
+                <small class="text-muted">{{ activeFilters.length }} filter(s) active</small>
+              </div>
+              <button 
+                type="button" 
+                class="btn btn-outline-secondary btn-sm"
+                (click)="clearAllFilters()"
+                [disabled]="activeFilters.length === 0">
+                Clear All
+              </button>
+            </div>
+            
+            <!-- Filter buttons -->
+            <div class="filter-buttons d-flex flex-wrap gap-2">
+              <button 
+                type="button" 
+                class="btn filter-btn"
+                [class.active]="isFilterActive('food')"
+                (click)="toggleFilter('food')">
+                <span class="filter-icon me-2">🍽️</span>
+                Food
+              </button>
+              
+              <button 
+                type="button" 
+                class="btn filter-btn"
+                [class.active]="isFilterActive('shelter')"
+                (click)="toggleFilter('shelter')">
+                <span class="filter-icon me-2">🏠</span>
+                Shelter
+              </button>
+              
+              <button 
+                type="button" 
+                class="btn filter-btn"
+                [class.active]="isFilterActive('water')"
+                (click)="toggleFilter('water')">
+                <span class="filter-icon me-2">💧</span>
+                Water
+              </button>
+              
+              <button 
+                type="button" 
+                class="btn filter-btn"
+                [class.active]="isFilterActive('toilets')"
+                (click)="toggleFilter('toilets')">
+                <span class="filter-icon me-2">🚻</span>
+                Toilets
+              </button>
+              
+              <button 
+                type="button" 
+                class="btn filter-btn"
+                [class.active]="isFilterActive('disabled-access')"
+                (click)="toggleFilter('disabled-access')">
+                <span class="filter-icon me-2">♿</span>
+                Disabled Access
+              </button>
+              
+              <button 
+                type="button" 
+                class="btn filter-btn"
+                [class.active]="isFilterActive('pet-friendly')"
+                (click)="toggleFilter('pet-friendly')">
+                <span class="filter-icon me-2">🐕</span>
+                Pet-Friendly
+              </button>
+              
+              <button 
+                type="button" 
+                class="btn filter-btn"
+                [class.active]="isFilterActive('child-safe')"
+                (click)="toggleFilter('child-safe')">
+                <span class="filter-icon me-2">👶</span>
+                Child-Safe
+              </button>
+              
+              <button 
+                type="button" 
+                class="btn filter-btn"
+                [class.active]="isFilterActive('free-wifi')"
+                (click)="toggleFilter('free-wifi')">
+                <span class="filter-icon me-2">📶</span>
+                Free Wi-Fi
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<router-outlet></router-outlet>

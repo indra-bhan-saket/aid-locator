@@ -93,3 +93,7 @@ mvn test -s ../settings.xml
 - **Parent**: `aid-locator:1.0.0`
 - **Inherits**: Spring Boot version, Java version, repositories, and plugin configuration
 - **Custom Settings**: Uses `../settings.xml` for Maven repository configuration
+
+# Swagger
+http://localhost:8080/swagger-ui/index.html#/
+

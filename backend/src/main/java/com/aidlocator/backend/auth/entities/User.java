@@ -7,6 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +28,7 @@ public class User implements UserDetails {
     private String phone;
     
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
     
     @Column(nullable = false)

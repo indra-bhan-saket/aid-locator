@@ -6,6 +6,9 @@ import com.aidlocator.backend.auth.dtos.RegisterUserDto;
 import com.aidlocator.backend.auth.responses.LoginResponse;
 import com.aidlocator.backend.auth.services.AuthenticationService;
 import com.aidlocator.backend.auth.services.JwtService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,21 +27,31 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<?> register(@RequestBody RegisterUserDto registerUserDto) {
         User registeredUser = authenticationService.register(registerUserDto);
-
+        if(registeredUser == null) {
+        	return new ResponseEntity<>("{\"error\": \"User already exists\"}", HttpStatus.BAD_REQUEST);
+        }
         return ResponseEntity.ok(registeredUser);
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
+		if (authenticatedUser != null) {
+			String jwtToken = jwtService.generateToken(authenticatedUser);
 
-        String jwtToken = jwtService.generateToken(authenticatedUser);
+			LoginResponse loginResponse = new LoginResponse().setToken(jwtToken)
+					.setExpiresIn(jwtService.getExpirationTime());
 
-        LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
+			loginResponse.setUser(authenticatedUser);
+			return ResponseEntity.ok(loginResponse);
+		}
+		
+		else {
+			return new ResponseEntity<LoginResponse>(HttpStatus.UNAUTHORIZED);
+		}
 
-        return ResponseEntity.ok(loginResponse);
     }
     
     @PostMapping("/logout")

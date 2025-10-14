@@ -99,6 +99,12 @@ public class ProviderListing {
 
 
 
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
+
 	public String getDescription() {
 		return description;
 	}

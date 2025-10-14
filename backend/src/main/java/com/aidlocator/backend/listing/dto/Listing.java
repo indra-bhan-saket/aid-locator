@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 
 public class Listing {
 	
+	private Integer id;
+	
     private String name;
 
     private String description;
@@ -101,6 +103,14 @@ public class Listing {
 		return "Listing [name=" + name + ", description=" + description + ", servicesOffered=" + servicesOffered
 				+ ", gpsLat=" + gpsLat + ", gpsLng=" + gpsLng + ", status=" + status + ", pin=" + pin + ", email="
 				+ email + ", capacity=" + capacity + "]";
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
  
 }

@@ -28,6 +28,7 @@ public class ListingService {
     	User user = userService.getUserByEmail(listing.getEmail());
     	if(user != null) {
     		ProviderListing providerListing = new ProviderListing();
+    		providerListing.setId(listing.getId());
     		providerListing.setUser(user);
     		providerListing.setActive(true);
     		providerListing.setCapacity(listing.getCapacity());

@@ -1,5 +1,6 @@
 package com.aidlocator.backend.listing.services;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +12,19 @@ import com.aidlocator.backend.listing.ProviderListing;
 import com.aidlocator.backend.listing.dto.Listing;
 import com.aidlocator.backend.listing.repositories.ListingRepository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+
 @Service
 public class ListingService {
     private final ListingRepository listingRepository;
     
     @Autowired
     private UserService userService;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
     
 
     public ListingService(ListingRepository listingRepository) {
@@ -38,6 +46,7 @@ public class ListingService {
     		providerListing.setName(listing.getName());
     		providerListing.setDescription(listing.getDescription());
     		providerListing.setPin(listing.getPin());
+    		providerListing.setStatus(listing.getStatus());
     		return listingRepository.save(providerListing);
     	}
 		return null;
@@ -57,5 +66,24 @@ public class ListingService {
 	 return (List<ProviderListing>) listingRepository.findAll();
 
 	}
+	
+	public List<ProviderListing> findByTags(String tagSearch, String status) {
+		List<String> tags = Arrays.asList(tagSearch.split(","));
+        StringBuilder sql = new StringBuilder("SELECT * FROM Provider_Listing where services_offered like  CONCAT('%',");
+        for (int i = 0; i < tags.size(); i++) {
+        	sql.append(":tag").append(i).append(",'%')");
+//            sql.append("?");
+            if (i < tags.size() - 1) {
+                sql.append(" OR services_offered like CONCAT('%',");
+            }
+        }
+        sql.append(" AND status=:status");
+        Query query = entityManager.createNativeQuery(sql.toString(), ProviderListing.class);
+        for (int i = 0; i < tags.size(); i++) {
+            query.setParameter("tag" + i, tags.get(i));
+        }
+        query.setParameter("status", status);
+        return query.getResultList();
+    }
 
 }

@@ -1,0 +1,284 @@
+{
+	"info": {
+		"_postman_id": "edd2eb7d-2f74-4867-9839-ab2d01268cdb",
+		"name": "Tech4Impact-Ahbap",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6312709",
+		"_collection_link": "https://restless-satellite-208730.postman.co/workspace/EIP-Booking~054309e8-3554-40ea-a461-10e692a49b4b/collection/6312709-edd2eb7d-2f74-4867-9839-ab2d01268cdb?action=share&source=collection_link&creator=6312709"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"test2@gmail.com\",\r\n    \"phone\": \"1010101010\",\r\n    \"password\": \"testpassword\",\r\n    \"role\": \"provider\",\r\n    \"name\":\"abc\",\r\n    \"type\":\"individual\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"test1@gmail.com\",\r\n    \"password\": \"testpassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Listings",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc2MDU0NzcxOSwiZXhwIjoxNzYwNTUxMzE5fQ.SCkmU1tNLTTi0pg7cSDg2p_QS1D3-JKbjupvMLblpLs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE3NjAwNDY3OTYsImV4cCI6MTc2MDEzMzE5Nn0.8hKJ9PB7UGu1DgagzHW0Fx5AzADkBLCyUpfyHn2lwjw"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n    \"name\": \"Food\",\r\n    \"description\": \"Food boxs\",\r\n    \"active\": true,\r\n    \"servicesOffered\": \"shelter, clean water\",\r\n    \"gpsLat\": \"\",\r\n    \"gpsLng\": \"\",\r\n    \"status\": \"pending\",\r\n    \"pin\": true,\r\n    \"capacity\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/private/listing",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"private",
+						"listing"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET All Listings",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/public/listings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"public",
+						"listings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET All Listings Admin",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE3NjA1NzMyNDIsImV4cCI6MTc2MDU3Njg0Mn0.p69pvI4zFrFYt61nznUHaPdYBRCInQX-wl3QuaA3JRo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/private/listingsReview",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"private",
+						"listingsReview"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET All Listings By User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc2MDU1NDY5NywiZXhwIjoxNzYwNTU4Mjk3fQ.YHMscoSk9urIGOVZDj5k0lXtu5eAA2CtMJfGRXGqV2M",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/private/listingsByUser",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"private",
+						"listingsByUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET All Listings By Tags",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/public/listingsByTags?tags=food,shelter&status=approved",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"public",
+						"listingsByTags"
+					],
+					"query": [
+						{
+							"key": "tags",
+							"value": "food,shelter"
+						},
+						{
+							"key": "status",
+							"value": "approved"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"test1@gmail.com\",\r\n    \"password\": \"testpassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

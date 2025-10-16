@@ -5,6 +5,8 @@ public class RegisterUserDto {
     private String phone;
     private String password;
     private String role;
+    private String name;
+    private String type;
     
 
     public String getEmail() {
@@ -41,9 +43,27 @@ public class RegisterUserDto {
 		this.role = role;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public RegisterUserDto setName(String name) {
+		this.name = name;
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		return super.toString();
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public RegisterUserDto setType(String type) {
+		this.type = type;
+		return this;
 	}
 
     

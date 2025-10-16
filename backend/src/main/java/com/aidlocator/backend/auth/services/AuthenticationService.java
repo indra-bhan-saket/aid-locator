@@ -4,6 +4,8 @@ import com.aidlocator.backend.auth.dtos.LoginUserDto;
 import com.aidlocator.backend.auth.dtos.RegisterUserDto;
 import com.aidlocator.backend.auth.entities.User;
 import com.aidlocator.backend.auth.repositories.UserRepository;
+import com.aidlocator.backend.constants.AidConstants;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,8 +35,11 @@ public class AuthenticationService {
     	if(!isUserExist(input)) {
         var user = new User()
             .setPhone(input.getPhone())
+            .setName(input.getName())
             .setEmail(input.getEmail())
             .setRole(input.getRole())
+            .setType(input.getType())
+            .setStatus(AidConstants.PENDING)
             .setPassword(passwordEncoder.encode(input.getPassword()));
 
         return userRepository.save(user);

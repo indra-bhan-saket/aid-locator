@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.aidlocator.backend.auth.entities.User;
+
 @Service
 public class JwtService {
     @Value("${security.jwt.secret-key}")
@@ -31,12 +33,18 @@ public class JwtService {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
-
+    
+    public Object extractClaimKey(String token, String key) {
+        final Claims claims = extractAllClaims(token);
+        return claims.get(key);
+    }
+    
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    	extraClaims.put("role", ((User)userDetails).getRole());
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 

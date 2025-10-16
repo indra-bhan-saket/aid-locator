@@ -21,15 +21,16 @@ public class AidLocatorController {
         this.listingService = listingService;
     }
 
-    @GetMapping("/listingsByEmail")
-    public ResponseEntity<List<ProviderListing>> userAllListings(@RequestParam("email") String email) {
-    	List<ProviderListing> providerListings = listingService.allListingForUser(email);
+       
+    @GetMapping("/listings")
+    public ResponseEntity<List<ProviderListing>> getAllListings() {
+    	List<ProviderListing> providerListings = listingService.getApprovedListings();
         return ResponseEntity.ok(providerListings);
     }
     
-    @GetMapping("/listings")
-    public ResponseEntity<List<ProviderListing>> getAllListings() {
-    	List<ProviderListing> providerListings = listingService.getAllListings();
+    @GetMapping("/listingsByTags")
+    public ResponseEntity<List<ProviderListing>> getAllListingsByCriteria(@RequestParam(name = "tags", required = false) String tags) {
+    	List<ProviderListing> providerListings = listingService.findByTags(tags);
         return ResponseEntity.ok(providerListings);
     }
 }

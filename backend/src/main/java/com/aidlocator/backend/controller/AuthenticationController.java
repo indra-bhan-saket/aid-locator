@@ -6,6 +6,7 @@ import com.aidlocator.backend.auth.dtos.RegisterUserDto;
 import com.aidlocator.backend.auth.responses.LoginResponse;
 import com.aidlocator.backend.auth.services.AuthenticationService;
 import com.aidlocator.backend.auth.services.JwtService;
+import com.aidlocator.backend.constants.AidConstants;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -39,6 +40,7 @@ public class AuthenticationController {
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
 		if (authenticatedUser != null) {
+			if(AidConstants.APPROVED.equalsIgnoreCase(authenticatedUser.getStatus())) {
 			String jwtToken = jwtService.generateToken(authenticatedUser);
 
 			LoginResponse loginResponse = new LoginResponse().setToken(jwtToken)
@@ -46,6 +48,8 @@ public class AuthenticationController {
 
 			loginResponse.setUser(authenticatedUser);
 			return ResponseEntity.ok(loginResponse);
+			}
+			return new ResponseEntity<LoginResponse>(HttpStatus.BAD_REQUEST);
 		}
 		
 		else {

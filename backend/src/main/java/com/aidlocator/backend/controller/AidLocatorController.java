@@ -29,8 +29,8 @@ public class AidLocatorController {
     }
     
     @GetMapping("/listingsByTags")
-    public ResponseEntity<List<ProviderListing>> getAllListingsByCriteria(@RequestParam("tags") String tags, @RequestParam("status") String status) {
-    	List<ProviderListing> providerListings = listingService.findByTags(tags, status);
+    public ResponseEntity<List<ProviderListing>> getAllListingsByCriteria(@RequestParam(name = "tags", required = false) String tags) {
+    	List<ProviderListing> providerListings = listingService.findByTags(tags);
         return ResponseEntity.ok(providerListings);
     }
 }

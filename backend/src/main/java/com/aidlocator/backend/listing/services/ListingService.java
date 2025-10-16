@@ -81,7 +81,7 @@ public class ListingService {
 
 	}
 	
-	public List<ProviderListing> findByTags(String tagSearch, String status) {
+	public List<ProviderListing> findByTags(String tagSearch) {
 		List<String> tags = Arrays.asList(tagSearch.split(","));
         StringBuilder sql = new StringBuilder("SELECT * FROM Provider_Listing where services_offered like CONCAT('%',");
         for (int i = 0; i < tags.size(); i++) {
@@ -90,12 +90,12 @@ public class ListingService {
                 sql.append(" OR services_offered like CONCAT('%',");
             }
         }
-        sql.append(" AND status=:status");
+        sql.append(" AND status='approved'");
         Query query = entityManager.createNativeQuery(sql.toString(), ProviderListing.class);
         for (int i = 0; i < tags.size(); i++) {
             query.setParameter("tag" + i, tags.get(i));
         }
-        query.setParameter("status", status);
+        
         return query.getResultList();
     }
 

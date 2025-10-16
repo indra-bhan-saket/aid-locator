@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aidlocator.backend.auth.dtos.UserApproval;
 import com.aidlocator.backend.auth.entities.User;
-import com.aidlocator.backend.auth.responses.LoginResponse;
 import com.aidlocator.backend.auth.services.UserService;
 import com.aidlocator.backend.constants.AidConstants;
 import com.aidlocator.backend.listing.ProviderListing;

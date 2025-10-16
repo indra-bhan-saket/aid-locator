@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "edd2eb7d-2f74-4867-9839-ab2d01268cdb",
+		"_postman_id": "968d0240-7133-4be7-a1c3-06c594217e97",
 		"name": "Tech4Impact-Ahbap",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "6312709",
-		"_collection_link": "https://restless-satellite-208730.postman.co/workspace/EIP-Booking~054309e8-3554-40ea-a461-10e692a49b4b/collection/6312709-edd2eb7d-2f74-4867-9839-ab2d01268cdb?action=share&source=collection_link&creator=6312709"
+		"_exporter_id": "452773"
 	},
 	"item": [
 		{
@@ -31,6 +30,91 @@
 					"path": [
 						"auth",
 						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET All User ADMIN",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE3NjA1NzkwMzksImV4cCI6MTc2MDU4MjYzOX0.y8AE7yGmiV7lnAPa4PWVTHQpE5RIhco4HjGw9Fp9ck0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/private/userReview",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"private",
+						"userReview"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Approve User ADMIN",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE3NjA1NzkwMzksImV4cCI6MTc2MDU4MjYzOX0.y8AE7yGmiV7lnAPa4PWVTHQpE5RIhco4HjGw9Fp9ck0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE3NjAwNDY3OTYsImV4cCI6MTc2MDEzMzE5Nn0.8hKJ9PB7UGu1DgagzHW0Fx5AzADkBLCyUpfyHn2lwjw"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"test@gmail.com\",\r\n    \"status\": \"approved\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/private/userApprove",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"private",
+						"userApprove"
 					]
 				}
 			},
@@ -115,68 +199,6 @@
 			"response": []
 		},
 		{
-			"name": "GET All Listings",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:8080/api/public/listings",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"public",
-						"listings"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GET All Listings Admin",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE3NjA1NzMyNDIsImV4cCI6MTc2MDU3Njg0Mn0.p69pvI4zFrFYt61nznUHaPdYBRCInQX-wl3QuaA3JRo",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:8080/api/private/listingsReview",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"private",
-						"listingsReview"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "GET All Listings By User",
 			"request": {
 				"auth": {
@@ -213,6 +235,117 @@
 			"response": []
 		},
 		{
+			"name": "GET All Listings ADMIN",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE3NjA1NzMyNDIsImV4cCI6MTc2MDU3Njg0Mn0.p69pvI4zFrFYt61nznUHaPdYBRCInQX-wl3QuaA3JRo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/private/listingsReview",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"private",
+						"listingsReview"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Approve Listing ADMIN",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE3NjA1NzMyNDIsImV4cCI6MTc2MDU3Njg0Mn0.p69pvI4zFrFYt61nznUHaPdYBRCInQX-wl3QuaA3JRo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE3NjAwNDY3OTYsImV4cCI6MTc2MDEzMzE5Nn0.8hKJ9PB7UGu1DgagzHW0Fx5AzADkBLCyUpfyHn2lwjw"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":2,\r\n    \"status\": \"pending\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/private/listingApprove",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"private",
+						"listingApprove"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET All Listings",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/public/listings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"public",
+						"listings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GET All Listings By Tags",
 			"request": {
 				"auth": {
@@ -226,7 +359,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/api/public/listingsByTags?tags=food,shelter&status=approved",
+					"raw": "http://localhost:8080/api/public/listingsByTags?tags=food,water",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -240,12 +373,154 @@
 					"query": [
 						{
 							"key": "tags",
-							"value": "food,shelter"
-						},
-						{
-							"key": "status",
-							"value": "approved"
+							"value": "food,water"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Feedback",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"listingId\": \"1\",\n    \"serviceType\": \"Cloths\",\n    \"visitorPhone\": \"12345666\",\n    \"visitorName\": \"testname\",\n    \"feedback\": \"still available\",\n    \"inactive\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/reporting/feedback",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"reporting",
+						"feedback"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Feedback",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/reporting/feedback",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"reporting",
+						"feedback"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Analytics",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"2\",\n    \"sessionId\": \"123333333333\",\n    \"pageVisited\": \"listing\",\n    \"actionType\": \"post\",\n    \"deviceType\": \"Laptop\",\n    \"browserInfo\": \"google chrome\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/reporting/analytics",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"reporting",
+						"analytics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Analytics",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/reporting/analytics",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"reporting",
+						"analytics"
 					]
 				}
 			},

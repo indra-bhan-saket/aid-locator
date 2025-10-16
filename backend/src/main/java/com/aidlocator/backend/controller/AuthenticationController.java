@@ -1,20 +1,19 @@
 package com.aidlocator.backend.controller;
 
-import com.aidlocator.backend.auth.entities.User;
-import com.aidlocator.backend.auth.dtos.LoginUserDto;
-import com.aidlocator.backend.auth.dtos.RegisterUserDto;
-import com.aidlocator.backend.auth.responses.LoginResponse;
-import com.aidlocator.backend.auth.services.AuthenticationService;
-import com.aidlocator.backend.auth.services.JwtService;
-import com.aidlocator.backend.constants.AidConstants;
-
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.aidlocator.backend.auth.dtos.LoginUserDto;
+import com.aidlocator.backend.auth.dtos.RegisterUserDto;
+import com.aidlocator.backend.auth.entities.User;
+import com.aidlocator.backend.auth.responses.LoginResponse;
+import com.aidlocator.backend.auth.services.AuthenticationService;
+import com.aidlocator.backend.auth.services.JwtService;
+import com.aidlocator.backend.constants.AidConstants;
 
 @RequestMapping("/auth")
 @RestController

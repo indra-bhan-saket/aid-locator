@@ -28,11 +28,20 @@ public class User implements UserDetails {
     private String phone;
     
     @Column(nullable = false)
+    private String name;
+    
+    @Column(nullable = false)
+    private String status;
+    
+    @Column(nullable = false)
     @JsonIgnore
     private String password;
     
     @Column(nullable = false)
     private String role;
+    
+    @Column(nullable = false)
+    private String type;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -135,7 +144,34 @@ public class User implements UserDetails {
         return this;
     }
 
-    @Override
+    public String getName() {
+		return name;
+	}
+
+	public User setName(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public User setStatus(String status) {
+		this.status = status;
+		return this;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public User setType(String type) {
+		this.type = type;
+		return this;
+	}
+
+	@Override
     public String toString() {
         return "User{" +
                 "id=" + id +

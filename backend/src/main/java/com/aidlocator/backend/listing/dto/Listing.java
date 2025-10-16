@@ -17,11 +17,9 @@ public class Listing {
     
     private BigDecimal gpsLng;
     
-    private String status;
+    private Boolean active;
     
     private Boolean pin;
-
-    private String email;
     
     private String capacity;
     
@@ -65,12 +63,12 @@ public class Listing {
 		this.gpsLng = gpsLng;
 	}
 
-	public String getStatus() {
-		return status;
+	public Boolean isActive() {
+		return active;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	public Boolean getPin() {
@@ -81,15 +79,6 @@ public class Listing {
 		this.pin = pin;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	
 	public String getCapacity() {
 		return capacity;
 	}
@@ -101,8 +90,7 @@ public class Listing {
 	@Override
 	public String toString() {
 		return "Listing [name=" + name + ", description=" + description + ", servicesOffered=" + servicesOffered
-				+ ", gpsLat=" + gpsLat + ", gpsLng=" + gpsLng + ", status=" + status + ", pin=" + pin + ", email="
-				+ email + ", capacity=" + capacity + "]";
+				+ ", gpsLat=" + gpsLat + ", gpsLng=" + gpsLng + ", active=" + active + ", pin=" + pin + ", capacity=" + capacity + "]";
 	}
 
 	public Integer getId() {

@@ -5,11 +5,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aidlocator.backend.auth.entities.User;
 import com.aidlocator.backend.auth.services.UserService;
+import com.aidlocator.backend.constants.AidConstants;
 import com.aidlocator.backend.listing.ProviderListing;
 import com.aidlocator.backend.listing.dto.Listing;
+import com.aidlocator.backend.listing.dto.ListingApproval;
 import com.aidlocator.backend.listing.repositories.ListingRepository;
 
 import jakarta.persistence.EntityManager;
@@ -32,13 +35,13 @@ public class ListingService {
     }
     
     
-    public ProviderListing storeListing(Listing listing) {
-    	User user = userService.getUserByEmail(listing.getEmail());
+    public ProviderListing storeListing(Listing listing, String email) {
+    	User user = userService.getUserByEmail(email);
     	if(user != null) {
     		ProviderListing providerListing = new ProviderListing();
     		providerListing.setId(listing.getId());
     		providerListing.setUser(user);
-    		providerListing.setActive(true);
+    		providerListing.setActive(listing.isActive());
     		providerListing.setCapacity(listing.getCapacity());
     		providerListing.setGpsLat(listing.getGpsLat());
     		providerListing.setGpsLat(listing.getGpsLng());
@@ -46,12 +49,19 @@ public class ListingService {
     		providerListing.setName(listing.getName());
     		providerListing.setDescription(listing.getDescription());
     		providerListing.setPin(listing.getPin());
-    		providerListing.setStatus(listing.getStatus());
+    		providerListing.setStatus(AidConstants.PENDING);
     		return listingRepository.save(providerListing);
     	}
 		return null;
     }
     
+    @Transactional
+	public int approveListing(ListingApproval listingApproval) {
+		ProviderListing providerListing = new ProviderListing();
+		providerListing.setId(listingApproval.getId());
+		providerListing.setStatus(listingApproval.getStatus());
+		return listingRepository.setStatusForProviderListing(listingApproval.getStatus(),listingApproval.getId());
+	}
 	
 	public List<ProviderListing> allListingForUser(String email) {
 		User user = userService.getUserByEmail(email);
@@ -62,6 +72,10 @@ public class ListingService {
 
 	}
 	
+	public List<ProviderListing> getApprovedListings() {
+			return listingRepository.findByStatus(AidConstants.APPROVED);
+	}
+	
 	public List<ProviderListing> getAllListings() {
 	 return (List<ProviderListing>) listingRepository.findAll();
 
@@ -69,10 +83,9 @@ public class ListingService {
 	
 	public List<ProviderListing> findByTags(String tagSearch, String status) {
 		List<String> tags = Arrays.asList(tagSearch.split(","));
-        StringBuilder sql = new StringBuilder("SELECT * FROM Provider_Listing where services_offered like  CONCAT('%',");
+        StringBuilder sql = new StringBuilder("SELECT * FROM Provider_Listing where services_offered like CONCAT('%',");
         for (int i = 0; i < tags.size(); i++) {
         	sql.append(":tag").append(i).append(",'%')");
-//            sql.append("?");
             if (i < tags.size() - 1) {
                 sql.append(" OR services_offered like CONCAT('%',");
             }

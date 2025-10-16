@@ -21,15 +21,10 @@ public class AidLocatorController {
         this.listingService = listingService;
     }
 
-    @GetMapping("/listingsByEmail")
-    public ResponseEntity<List<ProviderListing>> userAllListings(@RequestParam("email") String email) {
-    	List<ProviderListing> providerListings = listingService.allListingForUser(email);
-        return ResponseEntity.ok(providerListings);
-    }
-    
+       
     @GetMapping("/listings")
     public ResponseEntity<List<ProviderListing>> getAllListings() {
-    	List<ProviderListing> providerListings = listingService.getAllListings();
+    	List<ProviderListing> providerListings = listingService.getApprovedListings();
         return ResponseEntity.ok(providerListings);
     }
     

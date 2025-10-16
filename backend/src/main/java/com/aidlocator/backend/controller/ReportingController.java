@@ -16,6 +16,8 @@ import com.aidlocator.backend.common.entities.ListingFeedback;
 import com.aidlocator.backend.common.services.AnalyticsService;
 import com.aidlocator.backend.common.services.FeedbackService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RequestMapping("/api/reporting")
 @RestController
 public class ReportingController {
@@ -43,7 +45,8 @@ public class ReportingController {
 	}
 
 	@PostMapping("/analytics")
-	public ResponseEntity<Analytics> addAnalytics(@RequestBody AnalyticsDto analyticsDto) {
+	public ResponseEntity<Analytics> addAnalytics(@RequestBody AnalyticsDto analyticsDto, HttpServletRequest httpServletRequest) {
+		analyticsDto.setIpAddress(getIpAddress(httpServletRequest));
 		Analytics analytics = analyticsService.stoteAnalytics(analyticsDto);
 		return ResponseEntity.ok(analytics);
 	}
@@ -52,5 +55,13 @@ public class ReportingController {
 	public ResponseEntity<List<Analytics>> getAllAnalytics() {
 		List<Analytics> analytics = analyticsService.getAllListings();
 		return ResponseEntity.ok(analytics);
+	}
+	
+	private String getIpAddress(HttpServletRequest httpServletRequest) {
+		String ipAddress = httpServletRequest.getHeader("X-Forwarded-For");
+		if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+			ipAddress = httpServletRequest.getRemoteAddr();
+		}
+		return ipAddress;
 	}
 }

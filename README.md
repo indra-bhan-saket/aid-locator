@@ -10,6 +10,12 @@ aid-locator/                    # Parent Maven project
 ├── settings.xml               # Maven settings for corporate network compatibility
 ├── package.json               # Root package.json with monorepo scripts
 ├── start-dev.sh              # Development startup script
+├── docker-compose.yml        # Docker containerization
+├── .github/workflows/        # CI/CD pipeline
+├── docker/                    # Docker configuration
+│   ├── backend/Dockerfile     # Spring Boot container
+│   ├── frontend/Dockerfile    # Angular + Nginx container
+│   └── nginx/nginx.conf      # Nginx configuration for frontend
 ├── frontend/                  # Angular 20 application (Port 7200)
 │   ├── package.json
 │   └── src/
@@ -26,6 +32,7 @@ aid-locator/                    # Parent Maven project
 - CSS3
 - Bootstrap 5.3.8
 - Node.js 22+
+- Nginx Alpine (containerized)
 
 ### Backend
 - Java 17
@@ -33,6 +40,7 @@ aid-locator/                    # Parent Maven project
 - Maven 3.6+ (Parent-Child project structure)
 - Spring Web
 - Spring Boot Actuator
+- Eclipse Temurin JRE Alpine (containerized)
 
 ### Build System
 - **Maven Multi-Module**: Parent project managing backend as child module
@@ -42,9 +50,10 @@ aid-locator/                    # Parent Maven project
 ## Getting Started
 
 ### Prerequisites
-- Node.js 20.19+ or 22.12+ (for Angular 20)
+- Node.js 22.12+
 - Java 17
 - Maven 3.6+
+- Docker & Docker Compose (for containerized deployment)
 
 ### Quick Start
 
@@ -66,6 +75,28 @@ aid-locator/                    # Parent Maven project
    - Frontend: http://localhost:7200
    - Backend API: http://localhost:8080/api
    - Health Check: http://localhost:8080/actuator/health
+
+### Docker Deployment
+
+For production-like containerized deployment:
+
+1. **Build and start containers:**
+   ```bash
+   npm run docker:build
+   npm run docker:up
+   ```
+
+2. **Access the containerized application:**
+   - Frontend: http://localhost:7200 (Nginx serving Angular app)
+   - Backend API: http://localhost:8080/api (Spring Boot container)
+   - Health Check: http://localhost:8080/actuator/health
+
+3. **View logs and manage containers:**
+   ```bash
+   npm run docker:logs     # View container logs
+   npm run docker:down     # Stop containers
+   npm run docker:clean    # Stop containers and remove images
+   ```
 
 ### Individual Application Setup
 
@@ -111,6 +142,13 @@ From the root directory:
 - `npm run install:frontend` - Install only frontend dependencies
 - `npm run install:backend` - Resolve only backend dependencies (Maven parent project)
 
+### Docker Operations
+- `npm run docker:build` - Build backend JAR and create Docker images
+- `npm run docker:up` - Start containerized application
+- `npm run docker:down` - Stop containers
+- `npm run docker:logs` - View container logs
+- `npm run docker:clean` - Stop containers and remove images
+
 ### Maven Commands (Alternative)
 ```bash
 # All commands use the centralized settings.xml
@@ -133,6 +171,39 @@ mvn test -pl backend -s settings.xml           # Test backend module
 - **CORS Configuration**: Pre-configured for seamless frontend-backend communication
 - **Proxy Setup**: Angular dev server proxies API calls to Spring Boot backend
 - **Monorepo Structure**: Organized codebase with centralized scripts
+
+## CI/CD Pipeline
+
+The project includes automated CI/CD via GitHub Actions ([`.github/workflows/ci-build.yml`](.github/workflows/ci-build.yml)):
+
+### Pipeline Triggers
+- **Pull Requests**: Tests and builds on all PRs to `main` branch
+- **Pushes**: Tests, builds, and publishes container images on pushes to `main` or `develop`
+
+### Pipeline Steps
+1. **Setup Environment**: Node.js 22.12+ and Java 17
+2. **Install Dependencies**: `npm run install:all` 
+3. **Run Tests**: Both frontend (`npm run test:frontend`) and backend (`npm run test:backend`)
+4. **Build Applications**: `npm run build`
+5. **Build Container Images**: Creates Docker images for both frontend and backend
+6. **Push to Registry**: Publishes images to GitHub Container Registry (ghcr.io)
+
+### Container Images
+Published images are tagged with:
+- `{branch-name}-{commit-sha}`
+- **Backend**: https://github.com/vishal6695/aid-locator/pkgs/container/aid-locator-backend
+- **Frontend**: https://github.com/vishal6695/aid-locator/pkgs/container/aid-locator-frontend
+
+### Using CI-Built Images
+```bash
+# Pull and run latest CI-built images
+docker pull ghcr.io/vishal6695/aid-locator-backend:develop-latest
+docker pull ghcr.io/vishal6695/aid-locator-frontend:develop-latest
+
+# Run the containers
+docker run -d -p 8080:8080 -e SPRING_PROFILES_ACTIVE=docker ghcr.io/vishal6695/aid-locator-backend:develop-latest
+docker run -d -p 7200:80 ghcr.io/vishal6695/aid-locator-frontend:develop-latest
+```
 
 ## Architecture
 
@@ -167,14 +238,6 @@ The application follows a modern full-stack architecture:
 ## License
 
 This project is licensed under the MIT License.
-
-
-
-
-
-
-
-
 
 ### backend steps
 1. Please download(https://www.enterprisedb.com/downloads/postgres-postgresql-downloads) and run a postgres instance locally with db name "testdb" and password is "admin"

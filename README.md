@@ -167,3 +167,26 @@ The application follows a modern full-stack architecture:
 ## License
 
 This project is licensed under the MIT License.
+
+
+
+
+
+
+
+
+
+### backend steps
+1. Please download(https://www.enterprisedb.com/downloads/postgres-postgresql-downloads) and run a postgres instance locally with db name "testdb" and password is "admin"
+2. Use the register api and create one admin user by giving role as "admin"
+3. run this query to make admin "approved" with thier emailid same as registration- 
+"update users set status='approved' where email='<emailid>'"
+4. You can now create another provider with the same registration api.
+5. With the help of admin login created at the step 2, use the admin token from the admin login response and set as a auth bearer token to retrieve all providers and approve them using approver user api. you need to provide the provider's email and the status as "approved".
+6. Once provider is approved. Login with provider and get the token. Provider can post/update the listing. By default listing is pending.
+7. There is another api where you can retrieve your existing listings.
+8. Admin has to get and approve all the listings.
+9. You can search all the listings without any criteria.
+10. You can also search with tags like 'food,water..'
+11. Collection was also pushed as part of the backend code on the git repo
+

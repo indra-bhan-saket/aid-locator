@@ -1,0 +1,70 @@
+<div class="admin-console">
+  <!-- Header -->
+  <div class="admin-header">
+    <h1 class="admin-title">Admin Console</h1>
+    <!-- <button class="btn-add-location" (click)="addVerifiedLocation()">
+      <span class="plus-icon">+</span>
+      Add Verified Location
+    </button> -->
+  </div>
+
+  <!-- Tabs -->
+  <div class="admin-tabs">
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'pending-approvals'"
+      (click)="setActiveTab('pending-approvals')">
+      Pending Approvals
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'providers'"
+      (click)="setActiveTab('providers')">
+      Providers
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'reports'"
+      (click)="setActiveTab('reports')">
+      Reports & Issues
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'all-listings'"
+      (click)="setActiveTab('all-listings')">
+      All Listings
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div class="admin-content">
+    <!-- Pending Approvals Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'pending-approvals'">
+      <div class="content-card">
+        <app-pending-approvals></app-pending-approvals>
+      </div>
+    </div>
+
+    <!-- Providers Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'providers'">
+      <div class="content-card">
+        <app-aid-providers></app-aid-providers>
+      </div>
+    </div>
+
+    <!-- Reports & Issues Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'reports'">
+      <div class="content-card">
+        <h2 class="section-title">Reports & Issues</h2>
+        <p class="placeholder-text">Reports and issues management coming soon...</p>
+      </div>
+    </div>
+
+    <!-- All Listings Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'all-listings'">
+      <div class="content-card">
+        <app-all-listings></app-all-listings>
+      </div>
+    </div>
+  </div>
+</div>

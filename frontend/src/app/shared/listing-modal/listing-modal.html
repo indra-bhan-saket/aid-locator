@@ -1,0 +1,221 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{ modalTitle }}</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="listingForm" (ngSubmit)="onSubmit()">
+    <!-- Error message -->
+    <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Location Name -->
+    <div class="form-group">
+      <label for="name" class="form-label required">Location Name</label>
+      <input
+        type="text"
+        id="name"
+        class="form-control"
+        formControlName="name"
+        placeholder="Enter location name"
+        [class.is-invalid]="listingForm.get('name')?.invalid && listingForm.get('name')?.touched"
+      />
+      <div class="invalid-feedback" *ngIf="listingForm.get('name')?.invalid && listingForm.get('name')?.touched">
+        <span *ngIf="listingForm.get('name')?.errors?.['required']">Location name is required.</span>
+        <span *ngIf="listingForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters.</span>
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div class="form-group">
+      <label for="address" class="form-label required">Address</label>
+      <input
+        type="text"
+        id="address"
+        class="form-control"
+        formControlName="address"
+        placeholder="Enter full address"
+        [class.is-invalid]="listingForm.get('address')?.invalid && listingForm.get('address')?.touched"
+      />
+      <div class="invalid-feedback" *ngIf="listingForm.get('address')?.invalid && listingForm.get('address')?.touched">
+        <span *ngIf="listingForm.get('address')?.errors?.['required']">Address is required.</span>
+        <span *ngIf="listingForm.get('address')?.errors?.['minlength']">Address must be at least 5 characters.</span>
+      </div>
+    </div>
+
+    <!-- Latitude and Longitude Row -->
+    <div class="form-row">
+      <div class="form-group form-group-half">
+        <label for="latitude" class="form-label required">Latitude</label>
+        <input
+          type="text"
+          id="latitude"
+          class="form-control"
+          formControlName="latitude"
+          placeholder="e.g., 40.7128"
+          [class.is-invalid]="listingForm.get('latitude')?.invalid && listingForm.get('latitude')?.touched"
+        />
+        <div class="invalid-feedback" *ngIf="listingForm.get('latitude')?.invalid && listingForm.get('latitude')?.touched">
+          <span *ngIf="listingForm.get('latitude')?.errors?.['required']">Latitude is required.</span>
+          <span *ngIf="listingForm.get('latitude')?.errors?.['pattern']">Enter valid latitude (-90 to 90).</span>
+        </div>
+      </div>
+
+      <div class="form-group form-group-half">
+        <label for="longitude" class="form-label required">Longitude</label>
+        <input
+          type="text"
+          id="longitude"
+          class="form-control"
+          formControlName="longitude"
+          placeholder="e.g., -74.0060"
+          [class.is-invalid]="listingForm.get('longitude')?.invalid && listingForm.get('longitude')?.touched"
+        />
+        <div class="invalid-feedback" *ngIf="listingForm.get('longitude')?.invalid && listingForm.get('longitude')?.touched">
+          <span *ngIf="listingForm.get('longitude')?.errors?.['required']">Longitude is required.</span>
+          <span *ngIf="listingForm.get('longitude')?.errors?.['pattern']">Enter valid longitude (-180 to 180).</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Capacity and Status Row -->
+    <div class="form-row">
+      <div class="form-group form-group-half">
+        <label for="capacity" class="form-label required">Capacity</label>
+        <input
+          type="text"
+          id="capacity"
+          class="form-control"
+          formControlName="capacity"
+          placeholder="e.g., 200 people or 500 meals/day"
+          [class.is-invalid]="listingForm.get('capacity')?.invalid && listingForm.get('capacity')?.touched"
+        />
+        <div class="invalid-feedback" *ngIf="listingForm.get('capacity')?.invalid && listingForm.get('capacity')?.touched">
+          <span *ngIf="listingForm.get('capacity')?.errors?.['required']">Capacity is required.</span>
+        </div>
+      </div>
+
+      <div class="form-group form-group-half">
+        <label for="status" class="form-label required">Status</label>
+        <select
+          id="status"
+          class="form-control"
+          formControlName="status"
+          [class.is-invalid]="listingForm.get('status')?.invalid && listingForm.get('status')?.touched"
+        >
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <div class="form-group">
+      <label class="form-label required">Services Offered</label>
+      <div class="services-grid">
+        <button
+          *ngFor="let service of availableServices"
+          type="button"
+          class="service-chip"
+          [class.selected]="isServiceSelected(service.name)"
+          (click)="toggleService(service.name)"
+        >
+          <span class="service-icon">{{ service.icon }}</span>
+          <span class="service-label">{{ service.label }}</span>
+        </button>
+      </div>
+      <small class="form-text text-muted">Select all services that apply</small>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group">
+      <label for="description" class="form-label required">Description</label>
+      <textarea
+        id="description"
+        class="form-control"
+        formControlName="description"
+        rows="3"
+        placeholder="Describe the location and available facilities"
+        [class.is-invalid]="listingForm.get('description')?.invalid && listingForm.get('description')?.touched"
+      ></textarea>
+      <div class="invalid-feedback" *ngIf="listingForm.get('description')?.invalid && listingForm.get('description')?.touched">
+        <span *ngIf="listingForm.get('description')?.errors?.['required']">Description is required.</span>
+        <span *ngIf="listingForm.get('description')?.errors?.['minlength']">Description must be at least 10 characters.</span>
+      </div>
+    </div>
+
+    <!-- Contact Person -->
+    <div class="form-group">
+      <label for="contactPerson" class="form-label required">Contact Person</label>
+      <input
+        type="text"
+        id="contactPerson"
+        class="form-control"
+        formControlName="contactPerson"
+        placeholder="Enter contact person name"
+        [class.is-invalid]="listingForm.get('contactPerson')?.invalid && listingForm.get('contactPerson')?.touched"
+      />
+      <div class="invalid-feedback" *ngIf="listingForm.get('contactPerson')?.invalid && listingForm.get('contactPerson')?.touched">
+        <span *ngIf="listingForm.get('contactPerson')?.errors?.['required']">Contact person is required.</span>
+      </div>
+    </div>
+
+    <!-- Contact Phone and Email Row -->
+    <div class="form-row">
+      <div class="form-group form-group-half">
+        <label for="contactPhone" class="form-label required">Contact Phone</label>
+        <input
+          type="tel"
+          id="contactPhone"
+          class="form-control"
+          formControlName="contactPhone"
+          placeholder="Enter phone number"
+          [class.is-invalid]="listingForm.get('contactPhone')?.invalid && listingForm.get('contactPhone')?.touched"
+        />
+        <div class="invalid-feedback" *ngIf="listingForm.get('contactPhone')?.invalid && listingForm.get('contactPhone')?.touched">
+          <span *ngIf="listingForm.get('contactPhone')?.errors?.['required']">Phone is required.</span>
+          <span *ngIf="listingForm.get('contactPhone')?.errors?.['pattern']">Enter valid phone (10-15 digits).</span>
+        </div>
+      </div>
+
+      <div class="form-group form-group-half">
+        <label for="contactEmail" class="form-label required">Contact Email</label>
+        <input
+          type="email"
+          id="contactEmail"
+          class="form-control"
+          formControlName="contactEmail"
+          placeholder="Enter email address"
+          [class.is-invalid]="listingForm.get('contactEmail')?.invalid && listingForm.get('contactEmail')?.touched"
+        />
+        <div class="invalid-feedback" *ngIf="listingForm.get('contactEmail')?.invalid && listingForm.get('contactEmail')?.touched">
+          <span *ngIf="listingForm.get('contactEmail')?.errors?.['required']">Email is required.</span>
+          <span *ngIf="listingForm.get('contactEmail')?.errors?.['email']">Enter a valid email.</span>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-cancel" (click)="onCancel()">
+    Cancel
+  </button>
+  <button 
+    type="button" 
+    class="btn btn-submit" 
+    (click)="onSubmit()"
+    [disabled]="isLoading"
+  >
+    <span *ngIf="!isLoading">{{ submitButtonText }}</span>
+    <span *ngIf="isLoading">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      Saving...
+    </span>
+  </button>
+</div>

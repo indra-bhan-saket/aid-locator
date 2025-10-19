@@ -1,0 +1,89 @@
+<div class="locations-section">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0 fw-bold">Locations List</h4>
+    <span class="badge bg-secondary">{{ locations.length }} location(s) found</span>
+  </div>
+
+  <!-- No locations message -->
+  @if (locations.length === 0) {
+    <div class="card border-0 shadow-sm">
+      <div class="card-body text-center py-5">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-muted mb-3">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <h5 class="text-muted">No locations found</h5>
+        <p class="text-muted mb-0">Try adjusting your filters</p>
+      </div>
+    </div>
+  }
+
+  <!-- Locations cards -->
+  <div class="locations-grid">
+    @for (location of locations; track location.id) {
+      <div class="card border-0 shadow-sm location-card">
+        <div class="card-body p-4">
+          <!-- Header with name and status -->
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <h5 class="card-title mb-0 fw-bold">{{ location.name }}</h5>
+            <span class="badge" [ngClass]="location.status === 'open' ? 'bg-dark' : 'bg-secondary'">
+              {{ location.status }}
+            </span>
+          </div>
+
+          <!-- Address -->
+          <div class="location-address mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span class="text-muted">{{ location.address }}</span>
+          </div>
+
+          <!-- Available Services -->
+          <div class="mb-3">
+            <h6 class="fw-semibold mb-2" style="font-size: 0.875rem;">Available Services</h6>
+            <div class="services-badges">
+              @for (service of location.services; track service) {
+                <span class="service-badge">
+                  <span class="service-icon">{{ getServiceIcon(service) }}</span>
+                  <span class="service-label">{{ service }}</span>
+                </span>
+              }
+            </div>
+          </div>
+
+          <!-- Capacity and Updated info -->
+          <div class="location-meta mb-3">
+            <div class="meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span class="text-muted">{{ location.capacity }}</span>
+            </div>
+            <div class="meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span class="text-muted">Updated 15/01/2024, 13:30:00</span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p class="card-text text-muted mb-3" style="font-size: 0.9rem;">{{ location.description }}</p>
+
+          <!-- View Details Button -->
+          <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-outline-dark" (click)="viewDetails(location)">
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

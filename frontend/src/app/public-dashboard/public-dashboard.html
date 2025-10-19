@@ -1,0 +1,135 @@
+<div class="main-wrapper">
+  <div class="container">
+    <!-- Health Check Results -->
+    @if (healthResult) {
+      <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        <h5 class="alert-heading">Health Check Result:</h5>
+        <pre class="mb-0">{{ healthResult | json }}</pre>
+        <button type="button" class="btn-close" (click)="clearHealthResult()" aria-label="Close"></button>
+      </div>
+    }
+    
+    @if (healthError) {
+      <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        <h5 class="alert-heading">Health Check Error:</h5>
+        <p class="mb-0">{{ healthError }}</p>
+        <button type="button" class="btn-close" (click)="clearHealthResult()" aria-label="Close"></button>
+      </div>
+    }
+    
+    @if (isLoading) {
+      <div class="alert alert-info mt-3" role="alert">
+        <div class="d-flex align-items-center">
+          <div class="spinner-border spinner-border-sm me-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <span>Checking health status...</span>
+        </div>
+      </div>
+    }
+
+    <!-- Filter Services Section -->
+    <div class="filter-section mt-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <!-- Header with title and clear all button -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h5 class="card-title mb-1 fw-bold">Filter Services</h5>
+              <small class="text-muted">{{ activeFilters.length }} filter(s) active</small>
+            </div>
+            <button 
+              type="button" 
+              class="btn btn-outline-secondary btn-sm"
+              (click)="clearAllFilters()"
+              [disabled]="activeFilters.length === 0">
+              Clear All
+            </button>
+          </div>
+          
+          <!-- Filter buttons -->
+          <div class="filter-buttons d-flex flex-wrap gap-2">
+            <button 
+              type="button" 
+              class="btn filter-btn"
+              [class.active]="isFilterActive('food')"
+              (click)="toggleFilter('food')">
+              <span class="filter-icon me-2">🍽️</span>
+              Food
+            </button>
+            
+            <button 
+              type="button" 
+              class="btn filter-btn"
+              [class.active]="isFilterActive('shelter')"
+              (click)="toggleFilter('shelter')">
+              <span class="filter-icon me-2">🏠</span>
+              Shelter
+            </button>
+            
+            <button 
+              type="button" 
+              class="btn filter-btn"
+              [class.active]="isFilterActive('water')"
+              (click)="toggleFilter('water')">
+              <span class="filter-icon me-2">💧</span>
+              Water
+            </button>
+            
+            <button 
+              type="button" 
+              class="btn filter-btn"
+              [class.active]="isFilterActive('toilets')"
+              (click)="toggleFilter('toilets')">
+              <span class="filter-icon me-2">🚻</span>
+              Toilets
+            </button>
+            
+            <button 
+              type="button" 
+              class="btn filter-btn"
+              [class.active]="isFilterActive('disabled-access')"
+              (click)="toggleFilter('disabled-access')">
+              <span class="filter-icon me-2">♿</span>
+              Disabled Access
+            </button>
+            
+            <button 
+              type="button" 
+              class="btn filter-btn"
+              [class.active]="isFilterActive('pet-friendly')"
+              (click)="toggleFilter('pet-friendly')">
+              <span class="filter-icon me-2">🐕</span>
+              Pet-Friendly
+            </button>
+            
+            <button 
+              type="button" 
+              class="btn filter-btn"
+              [class.active]="isFilterActive('child-safe')"
+              (click)="toggleFilter('child-safe')">
+              <span class="filter-icon me-2">👶</span>
+              Child-Safe
+            </button>
+            
+            <button 
+              type="button" 
+              class="btn filter-btn"
+              [class.active]="isFilterActive('free-wifi')"
+              (click)="toggleFilter('free-wifi')">
+              <span class="filter-icon me-2">📶</span>
+              Free Wi-Fi
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Google Maps Section -->
+    <app-map-view [locations]="filteredLocations" class="mt-4"></app-map-view>
+
+    <!-- Locations List Section -->
+    <app-locations-list [locations]="filteredLocations" class="mt-4 mb-5"></app-locations-list>
+
+  </div>
+</div>

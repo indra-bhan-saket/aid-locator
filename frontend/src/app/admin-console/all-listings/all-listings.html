@@ -1,0 +1,43 @@
+<div class="all-listings">
+  <h2 class="section-title">All Listings ({{ listings.length }})</h2>
+  
+  <div class="listings-grid">
+    <div class="listing-card" *ngFor="let listing of listings">
+      <!-- Card Header -->
+      <div class="card-header">
+        <div class="header-left">
+          <h3 class="listing-name">{{ listing.name }}</h3>
+          <div class="badges">
+            <span class="badge badge-verification" [class.verified]="listing.verificationStatus === 'Verified'" [class.pending]="listing.verificationStatus === 'Pending'">
+              {{ listing.verificationStatus }}
+            </span>
+            <span class="badge badge-status" [class.status-open]="listing.status === 'open'" [class.status-full]="listing.status === 'full'">
+              {{ listing.status }}
+            </span>
+          </div>
+        </div>
+        <button class="btn-view" (click)="viewListing(listing)" title="View Details">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Address -->
+      <div class="card-address">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="location-icon">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor"/>
+        </svg>
+        <span>{{ listing.address }}</span>
+      </div>
+
+      <!-- Services -->
+      <div class="card-services">
+        <div class="service-tag" *ngFor="let service of listing.services">
+          <span class="service-icon">{{ getServiceIcon(service) }}</span>
+          <span class="service-label">{{ service }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

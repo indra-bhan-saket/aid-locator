@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LocationDetailsModalComponent } from '../../shared/location-details-modal/location-details-modal';
 import { AidListing, LocationDetails, getServiceIcon } from '../../models/location.models';
+import { ListingService } from '../../services/listing.service';
 
 @Component({
   selector: 'app-all-listings',
@@ -11,10 +12,43 @@ import { AidListing, LocationDetails, getServiceIcon } from '../../models/locati
   templateUrl: './all-listings.html',
   styleUrl: './all-listings.css'
 })
-export class AllListingsComponent {
-  constructor(private modalService: NgbModal) {}
+export class AllListingsComponent implements OnInit {
+  listings: AidListing[] = [];
+  isLoading = false;
+  errorMessage = '';
 
-  listings: AidListing[] = [
+  constructor(
+    private modalService: NgbModal,
+    private listingService: ListingService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadListings();
+  }
+
+  loadListings(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.listingService.getAllListings().subscribe({
+      next: (listings) => {
+        this.listings = listings;
+        this.isLoading = false;
+        console.log('All listings loaded:', this.listings);
+      },
+      error: (error) => {
+        console.error('Error loading listings:', error);
+        this.errorMessage = error.message || 'Failed to load listings';
+        this.isLoading = false;
+        // Fallback to sample data for development
+        this.loadSampleData();
+      }
+    });
+  }
+
+  loadSampleData(): void {
+    // Fallback sample data
+    this.listings = [
     {
       id: 1,
       name: 'Central Community Center',
@@ -55,7 +89,8 @@ export class AllListingsComponent {
       capacity: '100 people',
       description: 'Medical station with trained staff and equipment.'
     }
-  ];
+    ];
+  }
 
   viewListing(listing: AidListing) {
     const locationDetails: LocationDetails = {

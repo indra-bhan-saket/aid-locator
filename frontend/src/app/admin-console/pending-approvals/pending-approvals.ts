@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LocationDetailsModalComponent } from '../../shared/location-details-modal/location-details-modal';
 import { AidListing, LocationDetails, getServiceIcon } from '../../models/location.models';
+import { ListingService } from '../../services/listing.service';
 
 @Component({
   selector: 'app-pending-approvals',
@@ -11,47 +12,81 @@ import { AidListing, LocationDetails, getServiceIcon } from '../../models/locati
   templateUrl: './pending-approvals.html',
   styleUrl: './pending-approvals.css'
 })
-export class PendingApprovalsComponent {
-  constructor(private modalService: NgbModal) {}
+export class PendingApprovalsComponent implements OnInit {
+  pendingListings: AidListing[] = [];
+  isLoading = false;
+  errorMessage = '';
 
-  pendingLocations: AidListing[] = [
-    {
-      id: 1,
-      name: 'Central Community Center',
-      address: '123 Main St, Downtown',
-      provider: 'Red Cross Emergency Response',
-      services: ['shelter', 'food', 'water'],
-      status: 'open',
-      submitted: '15/01/2024, 13:30:00',
-      capacity: '200 people',
-      description: 'Large community center with multiple rooms and facilities.',
-      verificationStatus: 'Pending'
-    },
-    {
-      id: 2,
-      name: 'Riverside Emergency Shelter',
-      address: '456 River Rd, Riverside',
-      provider: 'Community Aid Network',
-      services: ['food', 'water', 'toilets', 'disabled-access'],
-      status: 'open',
-      submitted: '14/01/2024, 17:30:00',
-      capacity: '150 people',
-      description: 'Temporary shelter with accessible facilities.',
-      verificationStatus: 'Pending'
-    },
-    {
-      id: 3,
-      name: 'Emergency Medical Station',
-      address: '321 Health Plaza, Medical District',
-      provider: 'Emergency Medical Services',
-      services: ['water', 'toilets', 'medical'],
-      status: 'full',
-      submitted: '13/01/2024, 19:30:00',
-      capacity: '100 people',
-      description: 'Medical station with trained staff and equipment.',
-      verificationStatus: 'Pending'
-    }
-  ];
+  constructor(
+    private modalService: NgbModal,
+    private listingService: ListingService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadListings();
+  }
+
+  loadListings(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.listingService.getAllListings().subscribe({
+      next: (listings) => {
+        this.pendingListings = listings;
+        this.isLoading = false;
+        console.log('Listings loaded:', this.pendingListings);
+      },
+      error: (error) => {
+        console.error('Error loading listings:', error);
+        this.errorMessage = error.message || 'Failed to load listings';
+        this.isLoading = false;
+        // Fallback to sample data for development
+        this.loadSampleData();
+      }
+    });
+  }
+
+  loadSampleData(): void {
+    // Fallback sample data
+    this.pendingListings = [
+      {
+        id: 1,
+        name: 'Central Community Center',
+        address: '123 Main St, Downtown',
+        provider: 'Red Cross Emergency Response',
+        services: ['shelter', 'food', 'water'],
+        status: 'open',
+        submitted: '15/01/2024, 13:30:00',
+        capacity: '200 people',
+        description: 'Large community center with multiple rooms and facilities.',
+        verificationStatus: 'Pending'
+      },
+      {
+        id: 2,
+        name: 'Riverside Emergency Shelter',
+        address: '456 River Rd, Riverside',
+        provider: 'Community Aid Network',
+        services: ['food', 'water', 'toilets', 'disabled-access'],
+        status: 'open',
+        submitted: '14/01/2024, 17:30:00',
+        capacity: '150 people',
+        description: 'Temporary shelter with accessible facilities.',
+        verificationStatus: 'Pending'
+      },
+      {
+        id: 3,
+        name: 'Emergency Medical Station',
+        address: '321 Health Plaza, Medical District',
+        provider: 'Emergency Medical Services',
+        services: ['water', 'toilets', 'medical'],
+        status: 'full',
+        submitted: '13/01/2024, 19:30:00',
+        capacity: '100 people',
+        description: 'Medical station with trained staff and equipment.',
+        verificationStatus: 'Pending'
+      }
+    ];
+  }
 
   viewLocation(location: AidListing) {
     const locationDetails: LocationDetails = {

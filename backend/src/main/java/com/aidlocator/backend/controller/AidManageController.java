@@ -20,6 +20,7 @@ import com.aidlocator.backend.constants.AidConstants;
 import com.aidlocator.backend.listing.ProviderListing;
 import com.aidlocator.backend.listing.dto.Listing;
 import com.aidlocator.backend.listing.dto.ListingApproval;
+import com.aidlocator.backend.listing.dto.ListingDTO;
 import com.aidlocator.backend.listing.services.ListingService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,14 +52,17 @@ public class AidManageController {
 	}
 	
 	@GetMapping("/listingsReview")
-    public ResponseEntity<List<ProviderListing>> getAllListings(HttpServletRequest request) {
+    public ResponseEntity<List<ListingDTO>> getAllListings(HttpServletRequest request) {
 		String role = (String) request.getAttribute("role");
 		if(AidConstants.ADMIN.equalsIgnoreCase(role)) {
 			List<ProviderListing> providerListings = listingService.getAllListings();
-			return ResponseEntity.ok(providerListings);
+			List<ListingDTO> listingDTOs = providerListings.stream()
+				.map(ListingDTO::new)
+				.collect(Collectors.toList());
+			return ResponseEntity.ok(listingDTOs);
 		}
 		else {
-			return new ResponseEntity<List<ProviderListing>>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<List<ListingDTO>>(HttpStatus.UNAUTHORIZED);
 		}
 	}
 

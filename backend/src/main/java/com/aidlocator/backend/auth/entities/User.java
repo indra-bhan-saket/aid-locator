@@ -52,10 +52,12 @@ public class User implements UserDetails {
     private Date updatedAt;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

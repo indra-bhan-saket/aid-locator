@@ -1,13 +1,21 @@
 // User entity interface matching backend User class
 export interface User {
-  id?: number;
-  fullName: string;
+  id: number;
   email: string;
+  phone: string;
+  name: string;
+  status: string; // 'approved', 'pending', 'suspended'
+  role: string; // 'admin', 'provider', 'user'
+  type: string; // 'individual', 'organization'
+  createdAt: string;
+  updatedAt: string;
+  accountNonExpired: boolean;
+  accountNonLocked: boolean;
+  credentialsNonExpired: boolean;
+  username: string;
+  enabled: boolean;
   password?: string; // Optional as it shouldn't be returned in responses
-  createdAt?: Date;
-  updatedAt?: Date;
-  role?: string;
-  status?: string;
+  locationCount?: number; // Optional: for display purposes in admin console
 }
 
 // Login request DTO matching backend LoginUserDto

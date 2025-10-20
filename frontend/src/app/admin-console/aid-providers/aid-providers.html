@@ -1,7 +1,20 @@
 <div class="aid-providers">
   <h2 class="section-title">Provider Organizations</h2>
   
-  <div class="providers-table">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="alert alert-info d-flex align-items-center" role="alert">
+    <div class="spinner-border spinner-border-sm me-2" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <span>Loading providers...</span>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="alert alert-warning" role="alert">
+    <strong>Warning:</strong> {{ errorMessage }}. Showing sample data.
+  </div>
+
+  <div class="providers-table" *ngIf="!isLoading">
     <!-- Desktop Table Header -->
     <div class="table-header desktop-only">
       <div class="col-header">Organization</div>
@@ -9,6 +22,11 @@
       <div class="col-header">Locations</div>
       <div class="col-header">Status</div>
       <div class="col-header">Actions</div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="providers.length === 0" class="alert alert-info" role="alert">
+      No providers found.
     </div>
 
     <!-- Table Rows -->

@@ -98,7 +98,12 @@
 }
 
 .status-badge.status-approved {
-  background-color: #000;
+  background-color: #28a745;
+  color: white;
+}
+
+.status-badge.status-rejected {
+  background-color: #dc3545;
   color: white;
 }
 

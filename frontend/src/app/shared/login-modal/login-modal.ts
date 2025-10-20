@@ -42,7 +42,7 @@ export class LoginModalComponent implements OnInit {
 
     // Register form
     this.registerForm = this.fb.group({
-      fullName: ['', [Validators.required, Validators.minLength(2)]],
+      name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -113,7 +113,7 @@ export class LoginModalComponent implements OnInit {
       this.errorMessage = '';
 
       const registerData: RegisterUserDto = {
-        name: this.registerForm.value.fullName,
+        name: this.registerForm.value.name,
         email: this.registerForm.value.email,
         password: this.registerForm.value.password,
         phone: this.registerForm.value.phone,

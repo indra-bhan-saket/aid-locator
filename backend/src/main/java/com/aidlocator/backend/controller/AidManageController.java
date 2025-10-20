@@ -1,6 +1,7 @@
 package com.aidlocator.backend.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aidlocator.backend.auth.dtos.UserApproval;
+import com.aidlocator.backend.auth.dtos.UserResponse;
 import com.aidlocator.backend.auth.entities.User;
 import com.aidlocator.backend.auth.services.UserService;
 import com.aidlocator.backend.constants.AidConstants;
@@ -81,14 +83,17 @@ public class AidManageController {
 	}
 	
 	@GetMapping("/userReview")
-    public ResponseEntity<List<User>> getAllUsers(HttpServletRequest request) {
+    public ResponseEntity<List<UserResponse>> getAllUsers(HttpServletRequest request) {
 		String role = (String) request.getAttribute("role");
 		if(AidConstants.ADMIN.equalsIgnoreCase(role)) {
 			List<User> users = userService.allUsers();
-			return ResponseEntity.ok(users);
+			List<UserResponse> userResponses = users.stream()
+				.map(UserResponse::new)
+				.collect(Collectors.toList());
+			return ResponseEntity.ok(userResponses);
 		}
 		else {
-			return new ResponseEntity<List<User>>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<List<UserResponse>>(HttpStatus.UNAUTHORIZED);
 		}
 	}
 	

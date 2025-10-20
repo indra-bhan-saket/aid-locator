@@ -92,17 +92,17 @@
   <!-- Register Form -->
   <form *ngIf="mode === 'register'" [formGroup]="registerForm" (ngSubmit)="onRegister()">
     <div class="form-group">
-      <label for="fullName">Full Name</label>
+      <label for="name">Full Name</label>
       <input 
         type="text" 
-        id="fullName" 
+        id="name" 
         class="form-control" 
         placeholder="Enter your full name"
-        formControlName="fullName"
+        formControlName="name"
       />
-      <div class="invalid-feedback" *ngIf="registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched">
-        <span *ngIf="registerForm.get('fullName')?.errors?.['required']">Full name is required</span>
-        <span *ngIf="registerForm.get('fullName')?.errors?.['minlength']">Name must be at least 2 characters</span>
+      <div class="invalid-feedback" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+        <span *ngIf="registerForm.get('name')?.errors?.['required']">Full name is required</span>
+        <span *ngIf="registerForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters</span>
       </div>
     </div>
 

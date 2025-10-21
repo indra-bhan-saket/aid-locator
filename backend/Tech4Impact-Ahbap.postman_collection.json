@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"test2@gmail.com\",\r\n    \"phone\": \"1010101010\",\r\n    \"password\": \"testpassword\",\r\n    \"role\": \"provider\",\r\n    \"name\":\"abc\",\r\n    \"type\":\"individual\"\r\n}\r\n",
+					"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"phone\": \"1010101010\",\r\n    \"password\": \"testpassword\",\r\n    \"role\": \"provider\",\r\n    \"name\":\"abc\",\r\n    \"type\":\"individual\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -79,7 +79,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJpYXQiOjE3NjA1NzkwMzksImV4cCI6MTc2MDU4MjYzOX0.y8AE7yGmiV7lnAPa4PWVTHQpE5RIhco4HjGw9Fp9ck0",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3NjEwNzc1ODAsImV4cCI6MTc2MTA4MTE4MH0.C4a_B5PPSG7XEEfrm3Z1hTpjp-PzGBSn_ATiwJ7y0i8",
 							"type": "string"
 						}
 					]
@@ -529,6 +529,16 @@
 		{
 			"name": "Logout",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc2MTA2OTI4OCwiZXhwIjoxNzYxMDcyODg4fQ.Dj9btknnDrN-CNDb3T8j0cFy-CeHMpVQ-KBe4xF4WQU",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -556,7 +566,7 @@
 			"response": []
 		},
 		{
-			"name": "changePassword",
+			"name": "POST Change Password",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -588,6 +598,91 @@
 					"path": [
 						"auth",
 						"changePassword"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET User By Email",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoicHJvdmlkZXIiLCJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc2MTA3Nzc2OSwiZXhwIjoxNzYxMDgxMzY5fQ.5yLmFdwc4LOjqiiZcD6KL8FsC9XS_PBGULcA8BvUemw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/private/userByEmail",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"private",
+						"userByEmail"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Update User Profile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoicHJvdmlkZXIiLCJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc2MTA3Nzc2OSwiZXhwIjoxNzYxMDgxMzY5fQ.5yLmFdwc4LOjqiiZcD6KL8FsC9XS_PBGULcA8BvUemw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoicHJvdmlkZXIiLCJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc2MTA2NDYxNCwiZXhwIjoxNzYxMDY4MjE0fQ.aAHfAFjwPzZoRuuu2lQ0QlyhwXdJw6R8yPszC_bbPng"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 203,\r\n    \"type\": \"Organization\",\r\n    \"phone\": \"1122334455\",\r\n    \"name\": \"UpdatedValue\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/private/updateUserProfile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"private",
+						"updateUserProfile"
 					]
 				}
 			},

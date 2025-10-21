@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aidlocator.backend.auth.dtos.RegisterUserDto;
 import com.aidlocator.backend.auth.dtos.UserApproval;
 import com.aidlocator.backend.auth.dtos.UserResponse;
 import com.aidlocator.backend.auth.entities.User;
@@ -122,6 +124,29 @@ public class AidManageController {
 		else {
 			return new ResponseEntity<List<UserResponse>>(HttpStatus.UNAUTHORIZED);
 		}
+	}
+	
+	@GetMapping("/userByEmail")
+	public ResponseEntity<User> getUserByEmail(HttpServletRequest request) {
+		String email = (String) request.getAttribute("userEmail");
+		User user = userService.getUserByEmail(email);
+		return new ResponseEntity<User>(user, HttpStatus.OK);
+	}
+	
+	@PostMapping("/updateUserProfile")
+	public ResponseEntity<String> updateUserProfile(@RequestHeader("Authorization") String authHeader,
+			@RequestBody RegisterUserDto registerUserDto) {
+		String requestToken = authHeader.replace("Bearer ", "");
+		if (requestToken == null || requestToken.isBlank()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		Integer updatedRecord = userService.updateUserProfile(registerUserDto);
+		if (updatedRecord >= 1) {
+			return new ResponseEntity<String>("User profile updated successfully", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Profile update failed", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 	
 }

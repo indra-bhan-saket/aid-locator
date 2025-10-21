@@ -554,6 +554,44 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "changePassword",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoicHJvdmlkZXIiLCJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc2MTA2NDYxNCwiZXhwIjoxNzYxMDY4MjE0fQ.aAHfAFjwPzZoRuuu2lQ0QlyhwXdJw6R8yPszC_bbPng"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"newPassword\":\"testpassword1\",\"password\":\"testpassword2\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/changePassword",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"changePassword"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

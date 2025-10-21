@@ -3,6 +3,7 @@ package com.aidlocator.backend.auth.dtos;
 public class LoginUserDto {
     private String email;
     private String password;
+    private String newPassword;
 
     public String getEmail() {
         return email;
@@ -22,11 +23,18 @@ public class LoginUserDto {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return "LoginUserDto{" +
-                "email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
+   	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
+
+	@Override
+	public String toString() {
+		return "LoginUserDto [email=" + email + ", password=" + password + ", newPassword=" + newPassword + "]";
+	}
+	
+	
 }

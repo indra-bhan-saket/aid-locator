@@ -71,4 +71,9 @@ public class AuthenticationService {
 
         return users;
     }
+
+	public void updatePassword(LoginUserDto loginUserDto, User authenticatedUser) {
+		authenticatedUser.setPassword(passwordEncoder.encode(loginUserDto.getNewPassword()));
+		userRepository.save(authenticatedUser);
+	}
 }

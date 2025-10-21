@@ -15,6 +15,6 @@ public interface ListingRepository extends CrudRepository<ProviderListing, Integ
     List<ProviderListing> findByUser(User user);
     List<ProviderListing> findByStatus(String status);
     @Modifying
-    @Query("update ProviderListing pl set pl.status = ?1 where pl.id = ?2")
-    int setStatusForProviderListing(String status, Integer id);
+    @Query("update ProviderListing pl set pl.verificationStatus = ?1 where pl.id = ?2")
+    int setVerificationStatusForProviderListing(String verificationStatus, Integer id);
 }

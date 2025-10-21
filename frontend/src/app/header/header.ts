@@ -56,10 +56,6 @@ export class HeaderComponent implements OnInit {
     );
   }
 
-  onProviderDashboardClick() {
-    this.router.navigate(['/provider']);
-  }
-
   onLogoutClick() {
     if (confirm('Are you sure you want to logout?')) {
       this.authService.logout().subscribe({

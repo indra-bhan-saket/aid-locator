@@ -1,6 +1,7 @@
 package com.aidlocator.backend.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aidlocator.backend.listing.ProviderListing;
+import com.aidlocator.backend.listing.dto.ListingRes;
 import com.aidlocator.backend.listing.services.ListingService;
 
 @RequestMapping("/api/public")
@@ -23,14 +25,20 @@ public class AidLocatorController {
 
        
     @GetMapping("/listings")
-    public ResponseEntity<List<ProviderListing>> getAllListings() {
+    public ResponseEntity<List<ListingRes>> getAllListings() {
     	List<ProviderListing> providerListings = listingService.getApprovedListings();
-        return ResponseEntity.ok(providerListings);
+    	List<ListingRes> listingResponses = providerListings.stream()
+    		.map(ListingRes::new)
+    		.collect(Collectors.toList());
+        return ResponseEntity.ok(listingResponses);
     }
     
     @GetMapping("/listingsByTags")
-    public ResponseEntity<List<ProviderListing>> getAllListingsByCriteria(@RequestParam(name = "tags", required = false) String tags) {
+    public ResponseEntity<List<ListingRes>> getAllListingsByCriteria(@RequestParam(name = "tags", required = false) String tags) {
     	List<ProviderListing> providerListings = listingService.findByTags(tags);
-        return ResponseEntity.ok(providerListings);
+    	List<ListingRes> listingResponses = providerListings.stream()
+    		.map(ListingRes::new)
+    		.collect(Collectors.toList());
+        return ResponseEntity.ok(listingResponses);
     }
 }

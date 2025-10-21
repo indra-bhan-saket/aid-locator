@@ -31,55 +31,61 @@
     </div>
 
     <!-- Table Rows -->
-    <div class="table-row" *ngFor="let location of pendingListings">
+    <div class="table-row" *ngFor="let listing of pendingListings">
       <div class="col-location">
-        <div class="location-name">{{ location.name }}</div>
-        <div class="location-address">{{ location.address }}</div>
+        <div class="location-name">{{ listing.name }}</div>
+        <div class="location-address">{{ listing.address }}</div>
       </div>
       
       <div class="col-provider">
         <span class="mobile-label">Provider:</span>
-        {{ location.provider }}
+        {{ listing.provider }}
       </div>
       
       <div class="col-services">
         <span class="mobile-label">Services:</span>
         <div class="services-icons">
-          <span class="service-icon" *ngFor="let service of location.services.slice(0, 3)">
+          <span class="service-icon" *ngFor="let service of listing.services.slice(0, 3)">
             {{ getServiceIcon(service) }}
           </span>
-          <span class="service-more" *ngIf="location.services.length > 3">
-            +{{ location.services.length - 3 }}
+          <span class="service-more" *ngIf="listing.services.length > 3">
+            +{{ listing.services.length - 3 }}
           </span>
         </div>
       </div>
       
       <div class="col-status">
         <span class="mobile-label">Status:</span>
-        <span class="status-badge" [class.status-open]="location.status === 'open'" [class.status-full]="location.status === 'full'">
-          {{ location.status }}
+        <span class="status-badge" [class.status-open]="listing.status === 'open'" [class.status-full]="listing.status === 'full'">
+          {{ listing.status }}
         </span>
       </div>
       
       <div class="col-submitted">
         <span class="mobile-label">Submitted:</span>
-        {{ location.submitted }}
+        {{ listing.submitted }}
       </div>
       
       <div class="col-actions">
         <span class="mobile-label">Actions:</span>
         <div class="action-buttons">
-          <button class="btn-action btn-view" (click)="viewLocation(location)" title="View">
+          <button class="btn-action btn-view" (click)="viewListing(listing)" title="View">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/>
             </svg>
           </button>
-          <button class="btn-action btn-approve" (click)="approveLocation(location)" title="Approve">
+          <button class="btn-action btn-approve" 
+                  (click)="updateListingStatus(listing, 'verified')" 
+                  [disabled]="listing.verificationStatus === 'verified'"
+                  title="Approve">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor"/>
             </svg>
           </button>
-          <button class="btn-action btn-reject" (click)="rejectLocation(location)" title="Reject">
+          <button class="btn-action btn-reject" 
+                  (click)="updateListingStatus(listing, 'rejected')" 
+                  [disabled]="listing.verificationStatus === 'rejected'"
+                  title="Reject">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/>
             </svg>

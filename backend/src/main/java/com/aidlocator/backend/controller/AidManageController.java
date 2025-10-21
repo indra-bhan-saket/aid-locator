@@ -6,8 +6,11 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +45,26 @@ public class AidManageController {
 		String email = (String) request.getAttribute("userEmail");
 		ProviderListing providerListing = listingService.storeListing(listing,email);
 		return ResponseEntity.ok(providerListing);
+	}
+	
+	@PutMapping("/listing")
+	public ResponseEntity<ProviderListing> updateListing(@RequestBody Listing listing, HttpServletRequest request) {
+		String email = (String) request.getAttribute("userEmail");
+		ProviderListing providerListing = listingService.updateListing(listing,email);
+		if (providerListing != null) {
+			return ResponseEntity.ok(providerListing);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
+	@DeleteMapping("/listing/{id}")
+	public ResponseEntity<Void> deleteListing(@PathVariable("id") Integer id, HttpServletRequest request) {
+		String email = (String) request.getAttribute("userEmail");
+		boolean deleted = listingService.deleteListing(id, email);
+		if (deleted) {
+			return ResponseEntity.noContent().build();
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	@GetMapping("/listingsByUser")

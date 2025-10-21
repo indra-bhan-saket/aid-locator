@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AidListing } from '../../models/location.models';
+import { ProviderListingService, ListingDto } from '../../services/provider-listing.service';
 
 @Component({
   selector: 'app-listing-modal',
@@ -33,7 +34,8 @@ export class ListingModalComponent implements OnInit {
 
   constructor(
     public activeModal: NgbActiveModal,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private providerListingService: ProviderListingService
   ) {}
 
   ngOnInit(): void {
@@ -92,23 +94,46 @@ export class ListingModalComponent implements OnInit {
 
       const formValue = this.listingForm.value;
 
-      const locationData: AidListing = {
-        id: this.locationData?.id || 0,
+      const listingDto: ListingDto = {
+        id: this.mode === 'edit' ? this.locationData?.id : undefined,
         name: formValue.name,
         address: formValue.address,
-        latitude: formValue.latitude,
-        longitude: formValue.longitude,
-        capacity: formValue.capacity,
-        status: formValue.status,
         description: formValue.description,
+        servicesOffered: formValue.services.join(','),
+        gpsLat: parseFloat(formValue.latitude) || 0,
+        gpsLng: parseFloat(formValue.longitude) || 0,
+        capacity: formValue.capacity.toString(),
         contactPerson: formValue.contactPerson,
-        contactPhone: formValue.contactPhone,
         contactEmail: formValue.contactEmail,
-        services: formValue.services
+        contactPhone: formValue.contactPhone,
+        active: true,
+        pin: ''
       };
 
-      // Close modal and pass data back
-      this.activeModal.close({ action: this.mode, data: locationData });
+      if (this.mode === 'add') {
+        this.providerListingService.createListing(listingDto).subscribe({
+          next: (response) => {
+            this.isLoading = false;
+            this.activeModal.close({ action: 'add', data: response });
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.errorMessage = error.error?.message || 'Failed to create listing. Please try again.';
+          }
+        });
+      } else {
+        this.providerListingService.updateListing(listingDto).subscribe({
+          next: (response) => {
+            this.isLoading = false;
+            this.activeModal.close({ action: 'edit', data: response });
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.errorMessage = error.error?.message || 'Failed to update listing. Please try again.';
+          }
+        });
+      }
+      
     } else {
       // Mark all fields as touched to show validation errors
       Object.keys(this.listingForm.controls).forEach(key => {

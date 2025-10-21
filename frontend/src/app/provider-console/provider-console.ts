@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ListingModalComponent } from '../shared/listing-modal/listing-modal';
 import { AidListing, getServiceIcon } from '../models/location.models';
+import { ProviderListingService, ProviderListing } from '../services/provider-listing.service';
 
 @Component({
   selector: 'app-provider-console',
@@ -11,29 +12,49 @@ import { AidListing, getServiceIcon } from '../models/location.models';
   templateUrl: './provider-console.html',
   styleUrl: './provider-console.css'
 })
-export class ProviderConsoleComponent {
-  constructor(private modalService: NgbModal) {}
+export class ProviderConsoleComponent implements OnInit {
+  locations: AidListing[] = [];
+  isLoading: boolean = false;
+  errorMessage: string = '';
 
-  locations: AidListing[] = [
-    {
-      id: 1,
-      name: 'Central Community Center',
-      address: '123 Main St, Downtown',
-      services: ['food', 'shelter', 'water', 'child-safe'],
-      capacity: '200 people',
-      status: 'open',
-      description: 'Large community center with full kitchen facilities and sleeping areas.'
-    },
-    {
-      id: 2,
-      name: 'Food Distribution Point',
-      address: '789 Oak Ave, Westside',
-      services: ['food', 'water', 'pet-friendly'],
-      capacity: '500 meals/day',
-      status: 'open',
-      description: 'Mobile food distribution with pet-friendly area.'
-    }
-  ];
+  constructor(
+    private modalService: NgbModal,
+    private providerListingService: ProviderListingService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadUserListings();
+  }
+
+  loadUserListings(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.providerListingService.getUserListings().subscribe({
+      next: (providerListings: ProviderListing[]) => {
+        this.locations = providerListings.map(pl => ({
+          id: pl.id,
+          name: pl.name,
+          address: pl.address || '',
+          latitude: pl.gpsLat ? pl.gpsLat.toString() : '0',
+          longitude: pl.gpsLng ? pl.gpsLng.toString() : '0',
+          services: pl.servicesOffered ? pl.servicesOffered.split(',').map(s => s.trim()) : [],
+          capacity: pl.capacity || 'N/A',
+          status: pl.active ? 'open' : 'closed',
+          description: pl.description || 'No description',
+          contactPerson: pl.contactPerson || '',
+          contactPhone: pl.contactPhone || '',
+          contactEmail: pl.contactEmail || ''
+        }));
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading listings:', error);
+        this.errorMessage = 'Failed to load listings. Please try again.';
+        this.isLoading = false;
+      }
+    });
+  }
 
   addNewLocation(): void {
     const modalRef = this.modalService.open(ListingModalComponent, {
@@ -48,18 +69,8 @@ export class ProviderConsoleComponent {
     modalRef.result.then(
       (result) => {
         if (result.action === 'add') {
-          // Generate new ID
-          const newId = this.locations.length > 0 
-            ? Math.max(...this.locations.map(l => l.id)) + 1 
-            : 1;
-          
-          const newLocation: AidListing = {
-            ...result.data,
-            id: newId
-          };
-          
-          this.locations.unshift(newLocation);
-          console.log('Location added:', newLocation);
+          // Reload listings from backend
+          this.loadUserListings();
         }
       },
       (reason) => {
@@ -82,15 +93,8 @@ export class ProviderConsoleComponent {
     modalRef.result.then(
       (result) => {
         if (result.action === 'edit') {
-          // Find and update the location
-          const index = this.locations.findIndex(l => l.id === location.id);
-          if (index !== -1) {
-            this.locations[index] = {
-              ...result.data,
-              id: location.id
-            };
-            console.log('Location updated:', this.locations[index]);
-          }
+          // Reload listings from backend
+          this.loadUserListings();
         }
       },
       (reason) => {
@@ -101,11 +105,15 @@ export class ProviderConsoleComponent {
 
   deleteLocation(location: AidListing): void {
     if (confirm(`Are you sure you want to delete "${location.name}"? This action cannot be undone.`)) {
-      const index = this.locations.findIndex(l => l.id === location.id);
-      if (index !== -1) {
-        this.locations.splice(index, 1);
-        console.log('Location deleted:', location.name);
-      }
+      this.providerListingService.deleteListing(location.id).subscribe({
+        next: () => {
+          this.loadUserListings();
+        },
+        error: (error) => {
+          console.error('Error deleting listing:', error);
+          alert('Failed to delete listing. Please try again.');
+        }
+      });
     }
   }
 

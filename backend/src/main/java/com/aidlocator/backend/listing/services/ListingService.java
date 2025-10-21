@@ -38,21 +38,60 @@ public class ListingService {
     public ProviderListing storeListing(Listing listing, String email) {
     	User user = userService.getUserByEmail(email);
     	if(user != null) {
-    		ProviderListing providerListing = new ProviderListing();
-    		providerListing.setId(listing.getId());
-    		providerListing.setUser(user);
-    		providerListing.setActive(listing.isActive());
-    		providerListing.setCapacity(listing.getCapacity());
-    		providerListing.setGpsLat(listing.getGpsLat());
-    		providerListing.setGpsLat(listing.getGpsLng());
-    		providerListing.setServicesOffered(listing.getServicesOffered());
-    		providerListing.setName(listing.getName());
-    		providerListing.setDescription(listing.getDescription());
-    		providerListing.setPin(listing.getPin());
-    		providerListing.setStatus(AidConstants.PENDING);
-    		return listingRepository.save(providerListing);
+    	ProviderListing providerListing = new ProviderListing();
+    	providerListing.setId(listing.getId());
+    	providerListing.setUser(user);
+    	providerListing.setActive(listing.isActive());
+    	providerListing.setCapacity(listing.getCapacity());
+    	providerListing.setGpsLat(listing.getGpsLat());
+    	providerListing.setGpsLng(listing.getGpsLng());
+    	providerListing.setServicesOffered(listing.getServicesOffered());
+    	providerListing.setName(listing.getName());
+    	providerListing.setAddress(listing.getAddress());
+    	providerListing.setDescription(listing.getDescription());
+    	providerListing.setContactPerson(listing.getContactPerson());
+    	providerListing.setContactEmail(listing.getContactEmail());
+    	providerListing.setContactPhone(listing.getContactPhone());
+    	providerListing.setPin(listing.getPin());
+    	providerListing.setStatus(AidConstants.PENDING);
+    	return listingRepository.save(providerListing);
+    }
+	return null;
+    }
+    
+    public ProviderListing updateListing(Listing listing, String email) {
+    	User user = userService.getUserByEmail(email);
+    	if(user != null && listing.getId() != null) {
+    		ProviderListing existingListing = listingRepository.findById(listing.getId()).orElse(null);
+    		if(existingListing != null && existingListing.getUser().getId().equals(user.getId())) {
+    			existingListing.setActive(listing.isActive());
+    			existingListing.setCapacity(listing.getCapacity());
+    			existingListing.setGpsLat(listing.getGpsLat());
+    			existingListing.setGpsLng(listing.getGpsLng());
+    			existingListing.setServicesOffered(listing.getServicesOffered());
+    			existingListing.setName(listing.getName());
+    			existingListing.setAddress(listing.getAddress());
+    			existingListing.setDescription(listing.getDescription());
+    			existingListing.setContactPerson(listing.getContactPerson());
+    			existingListing.setContactEmail(listing.getContactEmail());
+    			existingListing.setContactPhone(listing.getContactPhone());
+    			existingListing.setPin(listing.getPin());
+    			return listingRepository.save(existingListing);
+    		}
     	}
-		return null;
+    	return null;
+    }
+    
+    public boolean deleteListing(Integer id, String email) {
+    	User user = userService.getUserByEmail(email);
+    	if (user != null) {
+    		ProviderListing listing = listingRepository.findById(id).orElse(null);
+    		if (listing != null && listing.getUser().getId().equals(user.getId())) {
+    			listingRepository.delete(listing);
+    			return true;
+    		}
+    	}
+    	return false;
     }
     
     @Transactional

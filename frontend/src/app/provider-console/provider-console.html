@@ -10,7 +10,30 @@
     </button>
   </div>
 
-  <div class="locations-list">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading your listings...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="error-container">
+    <p class="error-message">{{ errorMessage }}</p>
+    <button class="btn-retry" (click)="loadUserListings()">Retry</button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && !errorMessage && locations.length === 0" class="empty-state">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+      <circle cx="12" cy="10" r="3"></circle>
+    </svg>
+    <h3>No listings yet</h3>
+    <p>Start by adding your first listing</p>
+    <button class="btn-add-first" (click)="addNewLocation()">Add First Listing</button>
+  </div>
+
+  <div class="locations-list" *ngIf="!isLoading && !errorMessage && locations.length > 0">
     <div class="location-card" *ngFor="let location of locations">
       <div class="card-header">
         <div class="location-info">

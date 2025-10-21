@@ -9,6 +9,8 @@ public class Listing {
 	
     private String name;
 
+    private String address;
+
     private String description;
 
     private String servicesOffered;
@@ -23,12 +25,26 @@ public class Listing {
     
     private String capacity;
     
+    private String contactPerson;
+    
+    private String contactEmail;
+    
+    private String contactPhone;
+    
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public String getDescription() {
@@ -85,6 +101,30 @@ public class Listing {
 
 	public void setCapacity(String capacity) {
 		this.capacity = capacity;
+	}
+
+	public String getContactPerson() {
+		return contactPerson;
+	}
+
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
+	}
+
+	public String getContactEmail() {
+		return contactEmail;
+	}
+
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
+
+	public String getContactPhone() {
+		return contactPhone;
+	}
+
+	public void setContactPhone(String contactPhone) {
+		this.contactPhone = contactPhone;
 	}
 
 	@Override

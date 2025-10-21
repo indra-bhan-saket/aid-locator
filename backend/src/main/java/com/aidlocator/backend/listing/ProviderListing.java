@@ -34,6 +34,9 @@ public class ProviderListing {
     private String name;
 
     @Column
+    private String address;
+
+    @Column
     private String description;
 
     @Column
@@ -42,13 +45,11 @@ public class ProviderListing {
     @Column
     private String servicesOffered;
     
-    @Column
+    @Column(precision = 11, scale = 8)
     private BigDecimal gpsLat;
     
-    
-    @Column
+    @Column(precision = 11, scale = 8)
     private BigDecimal gpsLng;
-    
     
     @Column
     private String status;
@@ -59,6 +60,14 @@ public class ProviderListing {
 	@Column
     private String capacity;
     
+    @Column
+    private String contactPerson;
+    
+    @Column
+    private String contactEmail;
+    
+    @Column
+    private String contactPhone;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -97,7 +106,13 @@ public class ProviderListing {
 		this.name = name;
 	}
 
+	public String getAddress() {
+		return address;
+	}
 
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
 	public void setId(Integer id) {
 		this.id = id;
@@ -223,8 +238,28 @@ public class ProviderListing {
 		this.deletedAt = deletedAt;
 	}
 
+	public String getContactPerson() {
+		return contactPerson;
+	}
 
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
+	}
 
- 
+	public String getContactEmail() {
+		return contactEmail;
+	}
+
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
+
+	public String getContactPhone() {
+		return contactPhone;
+	}
+
+	public void setContactPhone(String contactPhone) {
+		this.contactPhone = contactPhone;
+	}
 
 }

@@ -1,6 +1,7 @@
 package com.aidlocator.backend.auth.dtos;
 
 public class RegisterUserDto {
+	private Integer id;
     private String email;
     private String phone;
     private String password;
@@ -8,8 +9,15 @@ public class RegisterUserDto {
     private String name;
     private String type;
     
+    public Integer getId() {
+		return id;
+	}
 
-    public String getEmail() {
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getEmail() {
         return email;
     }
 

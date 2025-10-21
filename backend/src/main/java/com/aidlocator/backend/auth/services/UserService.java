@@ -1,14 +1,16 @@
 package com.aidlocator.backend.auth.services;
 
-import com.aidlocator.backend.auth.dtos.UserApproval;
-import com.aidlocator.backend.auth.entities.User;
-import com.aidlocator.backend.auth.repositories.UserRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.aidlocator.backend.auth.dtos.RegisterUserDto;
+import com.aidlocator.backend.auth.dtos.UserApproval;
+import com.aidlocator.backend.auth.entities.User;
+import com.aidlocator.backend.auth.repositories.UserRepository;
 
 @Service
 public class UserService {
@@ -31,8 +33,13 @@ public class UserService {
     	return opt.isPresent()?opt.get():null;
     }
 
-    @Transactional
+	@Transactional
 	public int approveUser(UserApproval userApproval) {
 		return userRepository.setStatusForUser(userApproval.getStatus(), userApproval.getEmail());
+	}
+    
+	@Transactional
+	public int updateUserProfile(RegisterUserDto input) {
+		return userRepository.updateUser(input.getType(), input.getPhone(), input.getName(), input.getId());
 	}
 }

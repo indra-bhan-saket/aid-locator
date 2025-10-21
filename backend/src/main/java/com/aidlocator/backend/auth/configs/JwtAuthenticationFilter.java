@@ -14,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import com.aidlocator.backend.auth.services.JwtService;
+import com.aidlocator.backend.auth.services.RefreshTokenService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,13 +27,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private HandlerExceptionResolver handlerExceptionResolver;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final RefreshTokenService refreshTokenService;
 
 	public JwtAuthenticationFilter(
         JwtService jwtService,
-        UserDetailsService userDetailsService
+        UserDetailsService userDetailsService,
+        RefreshTokenService refreshTokenService
     ) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @Override
@@ -60,7 +64,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             	request.setAttribute("role", role);
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-                if (jwtService.isTokenValid(jwt, userDetails)) {
+                if (jwtService.isTokenValid(jwt, userDetails) && (refreshTokenService.findByToken(jwt) != null && !refreshTokenService.findByToken(jwt).isEmpty())) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,

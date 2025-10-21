@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +14,7 @@ import com.aidlocator.backend.auth.entities.User;
 import com.aidlocator.backend.auth.responses.LoginResponse;
 import com.aidlocator.backend.auth.services.AuthenticationService;
 import com.aidlocator.backend.auth.services.JwtService;
+import com.aidlocator.backend.auth.services.RefreshTokenService;
 import com.aidlocator.backend.constants.AidConstants;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -21,11 +23,14 @@ import jakarta.servlet.http.HttpServletRequest;
 public class AuthenticationController {
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
+    private final RefreshTokenService refreshTokenService;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
-        this.jwtService = jwtService;
-        this.authenticationService = authenticationService;
-    }
+	public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService,
+			RefreshTokenService refreshTokenService) {
+		this.jwtService = jwtService;
+		this.authenticationService = authenticationService;
+		this.refreshTokenService = refreshTokenService;
+	}
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterUserDto registerUserDto) {
@@ -42,7 +47,7 @@ public class AuthenticationController {
 		if (authenticatedUser != null) {
 			if(AidConstants.APPROVED.equalsIgnoreCase(authenticatedUser.getStatus())) {
 			String jwtToken = jwtService.generateToken(authenticatedUser);
-
+			refreshTokenService.createRefreshToken(jwtToken, jwtService.getExpirationTime(), authenticatedUser);
 			LoginResponse loginResponse = new LoginResponse().setToken(jwtToken)
 					.setExpiresIn(jwtService.getExpirationTime());
 
@@ -59,12 +64,17 @@ public class AuthenticationController {
     }
     
     @PostMapping("/logout")
-    public ResponseEntity<String> logout() {
-    	return ResponseEntity.ok("Success");
-    }
+	public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader, HttpServletRequest request) {
+		String requestToken = authHeader.replace("Bearer ", "");
+		if (requestToken == null || requestToken.isBlank()) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return findAndDeleteToken(requestToken);
+	}
     
     @PostMapping("/changePassword")
-	public ResponseEntity<String> changePassword(@RequestBody LoginUserDto loginUserDto, HttpServletRequest request) {
+	public ResponseEntity<String> changePassword(@RequestHeader("Authorization") String authHeader, @RequestBody LoginUserDto loginUserDto, HttpServletRequest request) {
+    	String requestToken = authHeader.replace("Bearer ", "");
     	if(request.getAttribute("userEmail") == null) {
     		return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
     	}
@@ -75,7 +85,13 @@ public class AuthenticationController {
 			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
 		}
 		authenticationService.updatePassword(loginUserDto,authenticatedUser);
-		
-		return ResponseEntity.ok("Success");
+		return findAndDeleteToken(requestToken);
+	}
+    
+	private ResponseEntity<String> findAndDeleteToken(String requestToken) {
+		return refreshTokenService.findByToken(requestToken).map(token -> {
+			refreshTokenService.deleteRefreshToken(token);
+			return ResponseEntity.ok("Logged out successfully");
+		}).orElse(ResponseEntity.badRequest().body("Invalid token"));
 	}
 }

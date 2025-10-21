@@ -14,6 +14,7 @@ import com.aidlocator.backend.auth.responses.LoginResponse;
 import com.aidlocator.backend.auth.services.AuthenticationService;
 import com.aidlocator.backend.auth.services.JwtService;
 import com.aidlocator.backend.constants.AidConstants;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RequestMapping("/auth")
 @RestController
@@ -61,4 +62,20 @@ public class AuthenticationController {
     public ResponseEntity<String> logout() {
     	return ResponseEntity.ok("Success");
     }
+    
+    @PostMapping("/changePassword")
+	public ResponseEntity<String> changePassword(@RequestBody LoginUserDto loginUserDto, HttpServletRequest request) {
+    	if(request.getAttribute("userEmail") == null) {
+    		return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+    	}
+		LoginUserDto dto = new LoginUserDto();
+		dto.setEmail((String) request.getAttribute("userEmail")).setPassword(loginUserDto.getPassword());
+		User authenticatedUser = authenticationService.authenticate(dto);
+		if (authenticatedUser == null) {
+			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+		}
+		authenticationService.updatePassword(loginUserDto,authenticatedUser);
+		
+		return ResponseEntity.ok("Success");
+	}
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,21 +42,15 @@ public class AidManageController {
 	}
 
 	@PostMapping("/listing")
-	public ResponseEntity<ProviderListing> storeListing(@RequestBody ListingReq listing, HttpServletRequest request) {
+	public ResponseEntity<ListingRes> storeListing(@RequestBody ListingReq listing, HttpServletRequest request) {
 		String email = (String) request.getAttribute("userEmail");
 		ProviderListing providerListing = listingService.storeListing(listing,email);
-		return ResponseEntity.ok(providerListing);
-	}
-	
-	@PutMapping("/listing")
-	public ResponseEntity<ProviderListing> updateListing(@RequestBody ListingReq listing, HttpServletRequest request) {
-		String email = (String) request.getAttribute("userEmail");
-		ProviderListing providerListing = listingService.updateListing(listing,email);
-		if (providerListing != null) {
-			return ResponseEntity.ok(providerListing);
+		if(providerListing == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return ResponseEntity.ok(new ListingRes(providerListing));
 	}
+
 	
 	@DeleteMapping("/listing/{id}")
 	public ResponseEntity<Void> deleteListing(@PathVariable("id") Integer id, HttpServletRequest request) {
@@ -70,10 +63,16 @@ public class AidManageController {
 	}
 	
 	@GetMapping("/listingsByUser")
-    public ResponseEntity<List<ProviderListing>> userAllListings(HttpServletRequest request) {
+    public ResponseEntity<List<ListingRes>> userAllListings(HttpServletRequest request) {
 		String email = (String) request.getAttribute("userEmail");
-    	List<ProviderListing> providerListings = listingService.allListingForUser(email);
-        return ResponseEntity.ok(providerListings);
+		List<ProviderListing> providerListings = listingService.allListingForUser(email);
+		if(providerListings == null) {
+			return ResponseEntity.ok(List.of());
+		}
+		List<ListingRes> listingDTOs = providerListings.stream()
+			.map(ListingRes::new)
+			.collect(Collectors.toList());
+        return ResponseEntity.ok(listingDTOs);
 	}
 	
 	@GetMapping("/listingsReview")

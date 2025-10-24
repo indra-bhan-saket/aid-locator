@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aidlocator.backend.auth.dtos.RegisterUserDto;
@@ -77,13 +78,16 @@ public class AidManageController {
 	}
 	
 	@GetMapping("/listingsReview")
-    public ResponseEntity<List<ListingDTO>> getAllListings(HttpServletRequest request) {
+    public ResponseEntity<List<ListingDTO>> getAllListings(@RequestParam(name = "tags", required = false) String tags, HttpServletRequest request, Object isApproved) {
 		String role = (String) request.getAttribute("role");
-		if(AidConstants.ADMIN.equalsIgnoreCase(role)) {
-			List<ProviderListing> providerListings = listingService.getAllListings();
-			List<ListingDTO> listingDTOs = providerListings.stream()
-				.map(ListingDTO::new)
-				.collect(Collectors.toList());
+		if (AidConstants.ADMIN.equalsIgnoreCase(role)) {
+			List<ProviderListing> providerListings = null;
+			if (tags == null || tags.isEmpty()) {
+				providerListings = listingService.getAllListings();
+			} else {
+				providerListings = listingService.findByTags(tags, false);
+			}
+			List<ListingDTO> listingDTOs = providerListings.stream().map(ListingDTO::new).collect(Collectors.toList());
 			return ResponseEntity.ok(listingDTOs);
 		}
 		else {

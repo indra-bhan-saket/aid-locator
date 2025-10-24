@@ -265,6 +265,12 @@
 						"api",
 						"private",
 						"listingsReview"
+					],
+					"query": [
+						{
+							"key": "tags",
+							"value": "shelter"
+						}
 					]
 				}
 			},

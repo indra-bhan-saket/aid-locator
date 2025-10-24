@@ -30,7 +30,7 @@ public class AidLocatorController {
     
     @GetMapping("/listingsByTags")
     public ResponseEntity<List<ProviderListing>> getAllListingsByCriteria(@RequestParam(name = "tags", required = false) String tags) {
-    	List<ProviderListing> providerListings = listingService.findByTags(tags);
+    	List<ProviderListing> providerListings = listingService.findByTags(tags, true);
         return ResponseEntity.ok(providerListings);
     }
 }

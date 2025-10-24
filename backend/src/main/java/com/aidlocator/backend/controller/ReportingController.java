@@ -2,6 +2,7 @@ package com.aidlocator.backend.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,9 +34,12 @@ public class ReportingController {
 	}
 
 	@PostMapping("/feedback")
-	public ResponseEntity<ListingFeedback> addFeedback(@RequestBody FeedbackDto feedbackDto) {
+	public ResponseEntity<?> addFeedback(@RequestBody FeedbackDto feedbackDto) {
 		ListingFeedback listingFeedback = feedbackService.storeListingFeedback(feedbackDto);
-		return ResponseEntity.ok(listingFeedback);
+		if (listingFeedback != null) {
+			return ResponseEntity.ok(listingFeedback);
+		}
+		return new ResponseEntity<>("Comment addtional failed", HttpStatus.BAD_REQUEST);
 	}
 
 	@GetMapping("/feedback")

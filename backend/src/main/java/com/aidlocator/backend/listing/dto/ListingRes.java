@@ -1,6 +1,9 @@
 package com.aidlocator.backend.listing.dto;
 
 import java.util.Date;
+import java.util.List;
+
+import com.aidlocator.backend.common.entities.ListingFeedback;
 import com.aidlocator.backend.listing.ProviderListing;
 
 public class ListingRes {
@@ -17,6 +20,7 @@ public class ListingRes {
 	private Date createdAt;
 	private String provider;
 	private String verificationStatus;
+	private List<ListingFeedback> feedbacks;
 	
 	public ListingRes() {
 	}
@@ -48,6 +52,8 @@ public class ListingRes {
 		this.verificationStatus = (listing.getVerificationStatus() != null) 
 			? listing.getVerificationStatus() 
 			: "pending";
+		
+		this.feedbacks = listing.getFeedbacks();
 	}
 
 	public Integer getId() {
@@ -144,6 +150,14 @@ public class ListingRes {
 
 	public void setVerificationStatus(String verificationStatus) {
 		this.verificationStatus = verificationStatus;
+	}
+	
+	public List<ListingFeedback> getFeedbacks() {
+		return feedbacks;
+	}
+
+	public void setFeedbacks(List<ListingFeedback> feedbacks) {
+		this.feedbacks = feedbacks;
 	}
 
 	@Override

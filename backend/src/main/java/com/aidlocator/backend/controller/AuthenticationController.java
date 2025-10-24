@@ -54,7 +54,9 @@ public class AuthenticationController {
 			loginResponse.setUser(authenticatedUser);
 			return ResponseEntity.ok(loginResponse);
 			}
-			return new ResponseEntity<LoginResponse>(HttpStatus.BAD_REQUEST);
+			LoginResponse errorResponse = new LoginResponse();
+			errorResponse.setError("Your login approval is pending, Please reach out to Admin for approval");
+			return new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
 		}
 		
 		else {
@@ -69,7 +71,8 @@ public class AuthenticationController {
 		if (requestToken == null || requestToken.isBlank()) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		return findAndDeleteToken(requestToken);
+		String msg = "Logged out successfully";
+		return findAndDeleteToken(requestToken, msg);
 	}
     
     @PostMapping("/changePassword")
@@ -85,13 +88,14 @@ public class AuthenticationController {
 			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
 		}
 		authenticationService.updatePassword(loginUserDto,authenticatedUser);
-		return findAndDeleteToken(requestToken);
+		String msg = "Password updated,Please relogin with new password";
+		return findAndDeleteToken(requestToken, msg);
 	}
     
-	private ResponseEntity<String> findAndDeleteToken(String requestToken) {
+	private ResponseEntity<String> findAndDeleteToken(String requestToken, String msg) {
 		return refreshTokenService.findByToken(requestToken).map(token -> {
 			refreshTokenService.deleteRefreshToken(token);
-			return ResponseEntity.ok("Logged out successfully");
+			return ResponseEntity.ok(msg);
 		}).orElse(ResponseEntity.badRequest().body("Invalid token"));
 	}
 }

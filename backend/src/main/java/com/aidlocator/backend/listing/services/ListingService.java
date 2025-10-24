@@ -54,7 +54,7 @@ public class ListingService {
     	providerListing.setContactPhone(listing.getContactPhone());
     	providerListing.setPin(listing.getPin());
     	providerListing.setStatus(AidConstants.PENDING);
-    	providerListing.setVerificationStatus("pending");
+    	providerListing.setVerificationStatus(AidConstants.PENDING);
     	return listingRepository.save(providerListing);
     }
 	return null;
@@ -118,7 +118,7 @@ public class ListingService {
 
 	}
 	
-	public List<ProviderListing> findByTags(String tagSearch) {
+	public List<ProviderListing> findByTags(String tagSearch, boolean isApproved) {
 		List<String> tags = Arrays.asList(tagSearch.split(","));
         StringBuilder sql = new StringBuilder("SELECT * FROM Provider_Listing where services_offered like CONCAT('%',");
         for (int i = 0; i < tags.size(); i++) {
@@ -127,7 +127,9 @@ public class ListingService {
                 sql.append(" OR services_offered like CONCAT('%',");
             }
         }
-        sql.append(" AND status='approved'");
+		if (isApproved) {
+			sql.append(" AND verification_status='approved'");
+		}
         Query query = entityManager.createNativeQuery(sql.toString(), ProviderListing.class);
         for (int i = 0; i < tags.size(); i++) {
             query.setParameter("tag" + i, tags.get(i));

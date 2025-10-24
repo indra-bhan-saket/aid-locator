@@ -57,6 +57,9 @@ public class ProviderListing {
     @Column
     private Boolean pin;
     
+    @Column
+    private String verificationStatus;
+    
 	@Column
     private String capacity;
     
@@ -260,6 +263,14 @@ public class ProviderListing {
 
 	public void setContactPhone(String contactPhone) {
 		this.contactPhone = contactPhone;
+	}
+
+	public String getVerificationStatus() {
+		return verificationStatus;
+	}
+
+	public void setVerificationStatus(String verificationStatus) {
+		this.verificationStatus = verificationStatus;
 	}
 
 }

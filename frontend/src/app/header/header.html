@@ -21,11 +21,6 @@
         <button *ngIf="!isLoggedIn" class="btn btn-dark login-btn" (click)="onLoginClick()">
           Login
         </button>
-        <button *ngIf="isLoggedIn" class="btn btn-light me-2" (click)="onProviderDashboardClick()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
-          </svg>
-          Provider Dashboard
-        </button>
         <button *ngIf="isLoggedIn" class="btn btn-outline-dark logout-btn" (click)="onLogoutClick()">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logout-icon">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>

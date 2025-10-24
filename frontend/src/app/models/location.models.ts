@@ -23,7 +23,7 @@ export interface AidListing {
   contactEmail?: string;
   provider?: string;
   submitted?: string;
-  verificationStatus?: 'Verified' | 'Pending';
+  verificationStatus?: 'verified' | 'pending' | 'rejected';
 }
 
 // Location details for display modal
@@ -45,7 +45,7 @@ export interface Listing {
   name: string;
   address: string;
   services: Service[];
-  verificationStatus: 'Verified' | 'Pending';
+  verificationStatus: 'verified' | 'pending' | 'rejected';
   status: 'open' | 'full';
   capacity?: string;
   description?: string;

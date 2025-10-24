@@ -11,7 +11,7 @@ import com.aidlocator.backend.auth.entities.User;
 import com.aidlocator.backend.auth.services.UserService;
 import com.aidlocator.backend.constants.AidConstants;
 import com.aidlocator.backend.listing.ProviderListing;
-import com.aidlocator.backend.listing.dto.Listing;
+import com.aidlocator.backend.listing.dto.ListingReq;
 import com.aidlocator.backend.listing.dto.ListingApproval;
 import com.aidlocator.backend.listing.repositories.ListingRepository;
 
@@ -35,7 +35,7 @@ public class ListingService {
     }
     
     
-    public ProviderListing storeListing(Listing listing, String email) {
+    public ProviderListing storeListing(ListingReq listing, String email) {
     	User user = userService.getUserByEmail(email);
     	if(user != null) {
     	ProviderListing providerListing = new ProviderListing();
@@ -54,12 +54,13 @@ public class ListingService {
     	providerListing.setContactPhone(listing.getContactPhone());
     	providerListing.setPin(listing.getPin());
     	providerListing.setStatus(AidConstants.PENDING);
+    	providerListing.setVerificationStatus("pending");
     	return listingRepository.save(providerListing);
     }
 	return null;
     }
     
-    public ProviderListing updateListing(Listing listing, String email) {
+    public ProviderListing updateListing(ListingReq listing, String email) {
     	User user = userService.getUserByEmail(email);
     	if(user != null && listing.getId() != null) {
     		ProviderListing existingListing = listingRepository.findById(listing.getId()).orElse(null);
@@ -96,10 +97,7 @@ public class ListingService {
     
     @Transactional
 	public int approveListing(ListingApproval listingApproval) {
-		ProviderListing providerListing = new ProviderListing();
-		providerListing.setId(listingApproval.getId());
-		providerListing.setStatus(listingApproval.getStatus());
-		return listingRepository.setStatusForProviderListing(listingApproval.getStatus(),listingApproval.getId());
+		return listingRepository.setVerificationStatusForProviderListing(listingApproval.getVerificationStatus(),listingApproval.getId());
 	}
 	
 	public List<ProviderListing> allListingForUser(String email) {

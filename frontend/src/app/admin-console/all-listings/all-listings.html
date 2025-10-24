@@ -26,7 +26,10 @@
         <div class="header-left">
           <h3 class="listing-name">{{ listing.name }}</h3>
           <div class="badges">
-            <span class="badge badge-verification" [class.verified]="listing.verificationStatus === 'Verified'" [class.pending]="listing.verificationStatus === 'Pending'">
+            <span class="badge badge-verification" 
+                  [class.verified]="listing.verificationStatus === 'verified'" 
+                  [class.pending]="listing.verificationStatus === 'pending'"
+                  [class.rejected]="listing.verificationStatus === 'rejected'">
               {{ listing.verificationStatus }}
             </span>
             <span class="badge badge-status" [class.status-open]="listing.status === 'open'" [class.status-full]="listing.status === 'full'">

@@ -3,7 +3,7 @@ package com.aidlocator.backend.listing.dto;
 import java.util.Date;
 import com.aidlocator.backend.listing.ProviderListing;
 
-public class ListingDTO {
+public class ListingRes {
 	
 	private Integer id;
 	private String name;
@@ -18,10 +18,10 @@ public class ListingDTO {
 	private String provider;
 	private String verificationStatus;
 	
-	public ListingDTO() {
+	public ListingRes() {
 	}
 	
-	public ListingDTO(ProviderListing listing) {
+	public ListingRes(ProviderListing listing) {
 		this.id = listing.getId();
 		this.name = listing.getName();
 		this.description = listing.getDescription();
@@ -29,6 +29,7 @@ public class ListingDTO {
 		this.status = listing.getStatus();
 		this.capacity = listing.getCapacity();
 		this.createdAt = listing.getCreatedAt();
+		this.address = listing.getAddress();
 		
 		// Convert GPS coordinates to strings
 		if (listing.getGpsLat() != null) {
@@ -38,20 +39,15 @@ public class ListingDTO {
 			this.gpsLng = listing.getGpsLng().toString();
 		}
 		
-		// Create a formatted address from GPS coordinates if available
-		if (listing.getGpsLat() != null && listing.getGpsLng() != null) {
-			this.address = "Lat: " + listing.getGpsLat() + ", Lng: " + listing.getGpsLng();
-		} else {
-			this.address = "Address not available";
-		}
-		
 		// Set provider name from user entity
 		if (listing.getUser() != null) {
 			this.provider = listing.getUser().getName();
 		}
 		
-		// Set verification status based on pin field
-		this.verificationStatus = (listing.getPin() != null && listing.getPin()) ? "Verified" : "Pending";
+		// Set verification status from entity field, default to pending if null
+		this.verificationStatus = (listing.getVerificationStatus() != null) 
+			? listing.getVerificationStatus() 
+			: "pending";
 	}
 
 	public Integer getId() {

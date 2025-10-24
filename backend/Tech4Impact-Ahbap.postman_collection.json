@@ -302,7 +302,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\":2,\r\n    \"status\": \"pending\"\r\n}",
+					"raw": "{\r\n    \"id\":2,\r\n    \"verificationStatus\": \"pending\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

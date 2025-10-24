@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LocationDetailsModalComponent } from '../../shared/location-details-modal/location-details-modal';
-import { AidListing, LocationDetails, getServiceIcon } from '../../models/location.models';
+import { ListingDetailsModalComponent } from '../../shared/listing-details-modal/listing-details-modal';
+import { AidListing, getServiceIcon } from '../../models/location.models';
 import { ListingService } from '../../services/listing.service';
 
 @Component({
@@ -54,7 +54,7 @@ export class AllListingsComponent implements OnInit {
       name: 'Central Community Center',
       address: '123 Main St, Downtown',
       services: ['food', 'shelter', 'water', 'child-safe'],
-      verificationStatus: 'Verified',
+      verificationStatus: 'verified',
       status: 'open',
       capacity: '200 people',
       description: 'Large community center with multiple rooms and facilities.'
@@ -64,7 +64,7 @@ export class AllListingsComponent implements OnInit {
       name: 'Riverside Emergency Shelter',
       address: '456 River Rd, Riverside',
       services: ['shelter', 'water', 'toilets', 'disabled-access'],
-      verificationStatus: 'Pending',
+      verificationStatus: 'pending',
       status: 'open',
       capacity: '150 people',
       description: 'Temporary shelter with accessible facilities.'
@@ -74,7 +74,7 @@ export class AllListingsComponent implements OnInit {
       name: 'Food Distribution Point',
       address: '789 Oak Ave, Westside',
       services: ['food', 'water', 'pet-friendly'],
-      verificationStatus: 'Verified',
+      verificationStatus: 'verified',
       status: 'open',
       capacity: '100 people',
       description: 'Food distribution center operating daily.'
@@ -84,7 +84,7 @@ export class AllListingsComponent implements OnInit {
       name: 'Emergency Medical Station',
       address: '321 Health Plaza, Medical District',
       services: ['water', 'toilets', 'medical'],
-      verificationStatus: 'Verified',
+      verificationStatus: 'verified',
       status: 'full',
       capacity: '100 people',
       description: 'Medical station with trained staff and equipment.'
@@ -93,36 +93,55 @@ export class AllListingsComponent implements OnInit {
   }
 
   viewListing(listing: AidListing) {
-    const locationDetails: LocationDetails = {
-      name: listing.name,
-      address: listing.address,
-      status: listing.status,
-      capacity: listing.capacity,
-      verified: listing.verificationStatus === 'Verified' ? 'Yes' : 'No',
-      description: listing.description,
-      services: listing.services.map(serviceName => ({
-        name: serviceName,
-        icon: getServiceIcon(serviceName)
-      }))
-    };
-
-    const modalRef = this.modalService.open(LocationDetailsModalComponent, {
+    const modalRef = this.modalService.open(ListingDetailsModalComponent, {
       centered: true,
       size: 'lg',
       backdrop: 'static'
     });
     
-    modalRef.componentInstance.location = locationDetails;
+    modalRef.componentInstance.listing = listing;
     
     modalRef.result.then(
       (result) => {
-        console.log('Modal action:', result);
-        // Handle approve/reject actions if needed
+        if (result === 'approved') {
+          this.updateListingStatus(listing, 'verified');
+        } else if (result === 'rejected') {
+          this.updateListingStatus(listing, 'rejected');
+        }
       },
       (reason) => {
         console.log('Modal dismissed:', reason);
       }
     );
+  }
+
+  updateListingStatus(listing: AidListing, status: 'verified' | 'rejected') {
+    if (!listing.id) {
+      console.error('Cannot update listing without ID');
+      return;
+    }
+
+    const approvalData = {
+      id: listing.id,
+      verificationStatus: status
+    };
+
+    const action = status === 'verified' ? 'approved' : 'rejected';
+
+    this.listingService.approveListing(approvalData).subscribe({
+      next: (result) => {
+        console.log(`Listing ${action} successfully:`, result);
+        // Update the listing in the local array
+        const index = this.listings.findIndex(l => l.id === listing.id);
+        if (index !== -1) {
+          this.listings[index].verificationStatus = status;
+        }
+      },
+      error: (error) => {
+        console.error(`Error ${action.slice(0, -1)}ing listing:`, error);
+        this.errorMessage = `Failed to ${action.slice(0, -1)} listing. Please try again.`;
+      }
+    });
   }
 
   getServiceIcon(serviceName: string): string {

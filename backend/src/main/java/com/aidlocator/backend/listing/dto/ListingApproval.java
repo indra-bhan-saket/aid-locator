@@ -4,7 +4,7 @@ public class ListingApproval {
 	
 	private Integer id;
 	
-    private String status;
+    private String verificationStatus;
 
 	public Integer getId() {
 		return id;
@@ -14,17 +14,17 @@ public class ListingApproval {
 		this.id = id;
 	}
 
-	public String getStatus() {
-		return status;
+	public String getVerificationStatus() {
+		return verificationStatus;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setVerificationStatus(String verificationStatus) {
+		this.verificationStatus = verificationStatus;
 	}
 
 	@Override
 	public String toString() {
-		return "ListingApproval [id=" + id + ", status=" + status + "]";
+		return "ListingApproval [id=" + id + ", verificationStatus=" + verificationStatus + "]";
 	}
     
 	

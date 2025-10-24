@@ -3,7 +3,7 @@ package com.aidlocator.backend.listing.dto;
 import java.math.BigDecimal;
 
 
-public class Listing {
+public class ListingReq {
 	
 	private Integer id;
 	

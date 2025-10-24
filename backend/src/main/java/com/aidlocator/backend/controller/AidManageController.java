@@ -24,9 +24,9 @@ import com.aidlocator.backend.auth.entities.User;
 import com.aidlocator.backend.auth.services.UserService;
 import com.aidlocator.backend.constants.AidConstants;
 import com.aidlocator.backend.listing.ProviderListing;
-import com.aidlocator.backend.listing.dto.Listing;
+import com.aidlocator.backend.listing.dto.ListingReq;
 import com.aidlocator.backend.listing.dto.ListingApproval;
-import com.aidlocator.backend.listing.dto.ListingDTO;
+import com.aidlocator.backend.listing.dto.ListingRes;
 import com.aidlocator.backend.listing.services.ListingService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,14 +44,14 @@ public class AidManageController {
 	}
 
 	@PostMapping("/listing")
-	public ResponseEntity<ProviderListing> storeListing(@RequestBody Listing listing, HttpServletRequest request) {
+	public ResponseEntity<ProviderListing> storeListing(@RequestBody ListingReq listing, HttpServletRequest request) {
 		String email = (String) request.getAttribute("userEmail");
 		ProviderListing providerListing = listingService.storeListing(listing,email);
 		return ResponseEntity.ok(providerListing);
 	}
 	
 	@PutMapping("/listing")
-	public ResponseEntity<ProviderListing> updateListing(@RequestBody Listing listing, HttpServletRequest request) {
+	public ResponseEntity<ProviderListing> updateListing(@RequestBody ListingReq listing, HttpServletRequest request) {
 		String email = (String) request.getAttribute("userEmail");
 		ProviderListing providerListing = listingService.updateListing(listing,email);
 		if (providerListing != null) {
@@ -78,7 +78,7 @@ public class AidManageController {
 	}
 	
 	@GetMapping("/listingsReview")
-    public ResponseEntity<List<ListingDTO>> getAllListings(@RequestParam(name = "tags", required = false) String tags, HttpServletRequest request, Object isApproved) {
+  public ResponseEntity<List<ListingDTO>> getAllListings(@RequestParam(name = "tags", required = false) String tags, HttpServletRequest request) {
 		String role = (String) request.getAttribute("role");
 		if (AidConstants.ADMIN.equalsIgnoreCase(role)) {
 			List<ProviderListing> providerListings = null;
@@ -91,7 +91,7 @@ public class AidManageController {
 			return ResponseEntity.ok(listingDTOs);
 		}
 		else {
-			return new ResponseEntity<List<ListingDTO>>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<List<ListingRes>>(HttpStatus.UNAUTHORIZED);
 		}
 	}
 

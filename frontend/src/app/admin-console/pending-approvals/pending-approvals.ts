@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LocationDetailsModalComponent } from '../../shared/location-details-modal/location-details-modal';
-import { AidListing, LocationDetails, getServiceIcon } from '../../models/location.models';
+import { ListingDetailsModalComponent } from '../../shared/listing-details-modal/listing-details-modal';
+import { AidListing, getServiceIcon } from '../../models/location.models';
 import { ListingService } from '../../services/listing.service';
 
 @Component({
@@ -30,7 +30,7 @@ export class PendingApprovalsComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.listingService.getAllListings().subscribe({
+    this.listingService.getAllPendingListings().subscribe({
       next: (listings) => {
         this.pendingListings = listings;
         this.isLoading = false;
@@ -59,7 +59,7 @@ export class PendingApprovalsComponent implements OnInit {
         submitted: '15/01/2024, 13:30:00',
         capacity: '200 people',
         description: 'Large community center with multiple rooms and facilities.',
-        verificationStatus: 'Pending'
+        verificationStatus: 'pending'
       },
       {
         id: 2,
@@ -71,7 +71,7 @@ export class PendingApprovalsComponent implements OnInit {
         submitted: '14/01/2024, 17:30:00',
         capacity: '150 people',
         description: 'Temporary shelter with accessible facilities.',
-        verificationStatus: 'Pending'
+        verificationStatus: 'pending'
       },
       {
         id: 3,
@@ -83,39 +83,26 @@ export class PendingApprovalsComponent implements OnInit {
         submitted: '13/01/2024, 19:30:00',
         capacity: '100 people',
         description: 'Medical station with trained staff and equipment.',
-        verificationStatus: 'Pending'
+        verificationStatus: 'pending'
       }
     ];
   }
 
-  viewLocation(location: AidListing) {
-    const locationDetails: LocationDetails = {
-      name: location.name,
-      address: location.address,
-      status: location.status,
-      capacity: location.capacity,
-      verified: 'No',
-      description: location.description,
-      services: location.services.map(serviceName => ({
-        name: serviceName,
-        icon: getServiceIcon(serviceName)
-      }))
-    };
-
-    const modalRef = this.modalService.open(LocationDetailsModalComponent, {
+  viewListing(listing: AidListing) {
+    const modalRef = this.modalService.open(ListingDetailsModalComponent, {
       centered: true,
       size: 'lg',
       backdrop: 'static'
     });
     
-    modalRef.componentInstance.location = locationDetails;
+    modalRef.componentInstance.listing = listing;
     
     modalRef.result.then(
       (result) => {
         if (result === 'approved') {
-          this.approveLocation(location);
+          this.updateListingStatus(listing, 'verified');
         } else if (result === 'rejected') {
-          this.rejectLocation(location);
+          this.updateListingStatus(listing, 'rejected');
         }
       },
       (reason) => {
@@ -124,14 +111,35 @@ export class PendingApprovalsComponent implements OnInit {
     );
   }
 
-  approveLocation(location: AidListing) {
-    console.log('Approve location:', location);
-    // TODO: Implement approve location functionality
-  }
+  updateListingStatus(listing: AidListing, status: 'verified' | 'rejected') {
+    if (!listing.id) {
+      console.error('Cannot update listing without ID');
+      return;
+    }
 
-  rejectLocation(location: AidListing) {
-    console.log('Reject location:', location);
-    // TODO: Implement reject location functionality
+    const approvalData = {
+      id: listing.id,
+      verificationStatus: status
+    };
+
+    const action = status === 'verified' ? 'approved' : 'rejected';
+
+    this.listingService.approveListing(approvalData).subscribe({
+      next: (result) => {
+        console.log(`Listing ${action} successfully:`, result);
+        // Update the listing in the local array
+        const index = this.pendingListings.findIndex(l => l.id === listing.id);
+        if (index !== -1) {
+          this.pendingListings.splice(index, 1);
+        }
+        // Optionally reload the listings
+        // this.loadListings();
+      },
+      error: (error) => {
+        console.error(`Error ${action.slice(0, -1)}ing listing:`, error);
+        this.errorMessage = `Failed to ${action.slice(0, -1)} listing. Please try again.`;
+      }
+    });
   }
 
   getServiceIcon(serviceName: string): string {

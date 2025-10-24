@@ -34,7 +34,7 @@ export class PublicDashboardComponent implements OnInit, OnDestroy {
       capacity: '200 people',
       status: 'open',
       description: 'Large community center with full kitchen facilities and sleeping areas.',
-      verificationStatus: 'Verified'
+      verificationStatus: 'verified'
     },
     {
       id: 2,
@@ -46,7 +46,7 @@ export class PublicDashboardComponent implements OnInit, OnDestroy {
       capacity: '150 people',
       status: 'open',
       description: 'Temporary shelter with accessible facilities.',
-      verificationStatus: 'Verified'
+      verificationStatus: 'verified'
     },
     {
       id: 3,
@@ -58,7 +58,7 @@ export class PublicDashboardComponent implements OnInit, OnDestroy {
       capacity: '500 meals/day',
       status: 'open',
       description: 'Mobile food distribution with pet-friendly area.',
-      verificationStatus: 'Verified'
+      verificationStatus: 'verified'
     },
     {
       id: 4,
@@ -70,7 +70,7 @@ export class PublicDashboardComponent implements OnInit, OnDestroy {
       capacity: '100 people',
       status: 'full',
       description: 'Medical station with trained staff and equipment.',
-      verificationStatus: 'Verified'
+      verificationStatus: 'verified'
     }
   ];
   

@@ -6,7 +6,7 @@ import { AidListing } from '../models/location.models';
 
 export interface ListingApproval {
   id: number;
-  status: string;
+  verificationStatus: string;
 }
 
 interface ListingResponse {
@@ -33,7 +33,21 @@ export class ListingService {
   constructor(private http: HttpClient) {}
 
   /**
-   * Get all listings for review (Admin only)
+   * Get all pending listings for review (Admin only)
+   */
+  getAllPendingListings(): Observable<AidListing[]> {
+    return this.http.get<ListingResponse[]>(`${this.apiUrl}/listingsReview`)
+      .pipe(
+        map(responses => responses
+          .map(this.mapToAidListing)
+          .filter(listing => listing.verificationStatus === 'pending')
+        ),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Get all listings (Admin only)
    */
   getAllListings(): Observable<AidListing[]> {
     return this.http.get<ListingResponse[]>(`${this.apiUrl}/listingsReview`)
@@ -59,7 +73,7 @@ export class ListingService {
       description: response.description || '',
       provider: response.provider,
       submitted: response.createdAt ? new Date(response.createdAt).toLocaleString() : '',
-      verificationStatus: (response.verificationStatus as 'Verified' | 'Pending') || 'Pending'
+      verificationStatus: (response.verificationStatus?.toLowerCase() as 'verified' | 'pending' | 'rejected') || 'pending'
     };
   }
 

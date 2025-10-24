@@ -22,6 +22,7 @@ import com.aidlocator.backend.auth.dtos.UserApproval;
 import com.aidlocator.backend.auth.dtos.UserResponse;
 import com.aidlocator.backend.auth.entities.User;
 import com.aidlocator.backend.auth.services.UserService;
+import com.aidlocator.backend.common.services.FeedbackService;
 import com.aidlocator.backend.constants.AidConstants;
 import com.aidlocator.backend.listing.ProviderListing;
 import com.aidlocator.backend.listing.dto.ListingReq;
@@ -35,12 +36,14 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestController
 public class AidManageController {
 	private final ListingService listingService;
+	private final FeedbackService feedbackService;
 	
 	@Autowired
 	private UserService userService;
 	
-	public AidManageController(ListingService listingService) {
+	public AidManageController(ListingService listingService, FeedbackService feedbackService) {
 		this.listingService = listingService;
+		this.feedbackService = feedbackService;
 	}
 
 	@PostMapping("/listing")
@@ -151,6 +154,20 @@ public class AidManageController {
 			return new ResponseEntity<String>("Profile update failed", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+	}
+	
+	@DeleteMapping("/feedback/{id}")
+	public ResponseEntity<String> deleteComment(@PathVariable("id") Integer id, HttpServletRequest request) {
+		String role = (String) request.getAttribute("role");
+		if (AidConstants.ADMIN.equalsIgnoreCase(role)) {
+			Boolean deleted = feedbackService.deleteComment(id);
+			if (deleted) {
+				return new ResponseEntity<String>("Comment delete successfully", HttpStatus.OK);
+			}
+			return new ResponseEntity<String>("Comment not found", HttpStatus.NOT_FOUND);
+		} else {
+			return new ResponseEntity<String>("Comment deletion is unauthorized", HttpStatus.UNAUTHORIZED);
+		}
 	}
 	
 }

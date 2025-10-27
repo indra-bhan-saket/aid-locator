@@ -11,8 +11,8 @@ import com.aidlocator.backend.auth.entities.User;
 import com.aidlocator.backend.auth.services.UserService;
 import com.aidlocator.backend.constants.AidConstants;
 import com.aidlocator.backend.listing.ProviderListing;
-import com.aidlocator.backend.listing.dto.ListingReq;
 import com.aidlocator.backend.listing.dto.ListingApproval;
+import com.aidlocator.backend.listing.dto.ListingReq;
 import com.aidlocator.backend.listing.repositories.ListingRepository;
 
 import jakarta.persistence.EntityManager;
@@ -39,6 +39,12 @@ public class ListingService {
     	User user = userService.getUserByEmail(email);
     	if(user != null) {
     	ProviderListing providerListing = new ProviderListing();
+		if (listing.getId() != null) {
+			ProviderListing existingLising = listingRepository.findById(listing.getId()).orElse(null);
+			if (existingLising == null || !existingLising.getUser().getId().equals(user.getId())) {
+				return null;
+			}
+		}
     	providerListing.setId(listing.getId());
     	providerListing.setUser(user);
     	providerListing.setActive(listing.isActive());

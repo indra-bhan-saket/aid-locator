@@ -46,11 +46,11 @@ public class AidManageController {
 	}
 
 	@PostMapping("/listing")
-	public ResponseEntity<ListingRes> storeListing(@RequestBody ListingReq listing, HttpServletRequest request) {
+	public ResponseEntity<?> storeListing(@RequestBody ListingReq listing, HttpServletRequest request) {
 		String email = (String) request.getAttribute("userEmail");
 		ProviderListing providerListing = listingService.storeListing(listing,email);
 		if(providerListing == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Add/Update listing failed", HttpStatus.BAD_REQUEST);
 		}
 		return ResponseEntity.ok(new ListingRes(providerListing));
 	}

@@ -35,7 +35,7 @@ public class AidLocatorController {
     
     @GetMapping("/listingsByTags")
     public ResponseEntity<List<ListingRes>> getAllListingsByCriteria(@RequestParam(name = "tags", required = false) String tags) {
-    	List<ProviderListing> providerListings = listingService.findByTags(tags);
+    	List<ProviderListing> providerListings = listingService.findByTags(tags, true);
     	List<ListingRes> listingResponses = providerListings.stream()
     		.map(ListingRes::new)
     		.collect(Collectors.toList());

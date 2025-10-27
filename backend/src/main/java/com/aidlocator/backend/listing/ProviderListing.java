@@ -1,24 +1,31 @@
 package com.aidlocator.backend.listing;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import com.aidlocator.backend.auth.entities.User;
+import com.aidlocator.backend.common.entities.ListingFeedback;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Table(name = "ProviderListing")
 @Entity
-public class ProviderListing {
+public class ProviderListing implements Serializable {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -80,6 +87,8 @@ public class ProviderListing {
     @Column(name = "deleted_at")
     private Date deletedAt;
     
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "providerListing", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ListingFeedback> feedbacks = new ArrayList<ListingFeedback>();
 
 	public Integer getId() {
 		return id;
@@ -271,6 +280,14 @@ public class ProviderListing {
 
 	public void setVerificationStatus(String verificationStatus) {
 		this.verificationStatus = verificationStatus;
+	}
+
+	public List<ListingFeedback> getFeedbacks() {
+		return feedbacks;
+	}
+
+	public void setFeedbacks(List<ListingFeedback> feedbacks) {
+		this.feedbacks = feedbacks;
 	}
 
 }

@@ -255,7 +255,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/api/private/listingsReview",
+					"raw": "http://localhost:8080/api/private/listingsReview?tags=food,water",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -265,6 +265,12 @@
 						"api",
 						"private",
 						"listingsReview"
+					],
+					"query": [
+						{
+							"key": "tags",
+							"value": "food,water"
+						}
 					]
 				}
 			},
@@ -296,7 +302,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\":2,\r\n    \"verificationStatus\": \"pending\"\r\n}",
+					"raw": "{\r\n    \"id\":2,\r\n    \"status\": \"pending\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -392,7 +398,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"listingId\": \"1\",\n    \"serviceType\": \"Cloths\",\n    \"visitorPhone\": \"12345666\",\n    \"visitorName\": \"testname\",\n    \"feedback\": \"still available\",\n    \"inactive\": false\n}",
+					"raw": "{\n    \"listingId\": 152,\n    \"feedback\": \"Pet food not available\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -448,6 +454,52 @@
 						"api",
 						"reporting",
 						"feedback"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Feedback By Admin",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3NjEzMzM3ODgsImV4cCI6MTc2MTMzNzM4OH0.mrxzjT9N_nzaDGazLHREUzwMiNdGanrcB5qu6srXSDk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/private/feedback/152",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"private",
+						"feedback",
+						"152"
 					]
 				}
 			},

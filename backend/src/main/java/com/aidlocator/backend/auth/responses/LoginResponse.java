@@ -8,6 +8,8 @@ public class LoginResponse {
     private long expiresIn;
     
     private User user;
+    
+    private String error;
 
     public String getToken() {
         return token;
@@ -29,7 +31,7 @@ public class LoginResponse {
 
     @Override
 	public String toString() {
-		return "LoginResponse [token=" + token + ", expiresIn=" + expiresIn + ", user=" + user + "]";
+		return "LoginResponse [token=" + token + ", expiresIn=" + expiresIn + ", user=" + user + ", error=\" + error + \"]";
 	}
 
 	public User getUser() {
@@ -38,5 +40,13 @@ public class LoginResponse {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
 	}
 }

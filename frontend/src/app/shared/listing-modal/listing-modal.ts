@@ -57,7 +57,8 @@ export class ListingModalComponent implements OnInit {
       contactPerson: [this.locationData?.contactPerson || '', [Validators.required]],
       contactPhone: [this.locationData?.contactPhone || '', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
       contactEmail: [this.locationData?.contactEmail || '', [Validators.required, Validators.email]],
-      services: [selectedServices]
+      services: [selectedServices],
+      pin: [false]
     });
   }
 
@@ -107,7 +108,7 @@ export class ListingModalComponent implements OnInit {
         contactEmail: formValue.contactEmail,
         contactPhone: formValue.contactPhone,
         active: true,
-        pin: ''
+        pin: formValue.pin === true
       };
 
       if (this.mode === 'add') {

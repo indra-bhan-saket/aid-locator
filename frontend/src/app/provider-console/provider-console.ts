@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ListingModalComponent } from '../shared/listing-modal/listing-modal';
 import { AidListing, getServiceIcon } from '../models/location.models';
-import { ProviderListingService, ProviderListing } from '../services/provider-listing.service';
+import { ProviderListingService } from '../services/provider-listing.service';
 
 @Component({
   selector: 'app-provider-console',
@@ -31,21 +31,8 @@ export class ProviderConsoleComponent implements OnInit {
     this.errorMessage = '';
 
     this.providerListingService.getUserListings().subscribe({
-      next: (providerListings: ProviderListing[]) => {
-        this.locations = providerListings.map(pl => ({
-          id: pl.id,
-          name: pl.name,
-          address: pl.address || '',
-          latitude: pl.gpsLat ? pl.gpsLat.toString() : '0',
-          longitude: pl.gpsLng ? pl.gpsLng.toString() : '0',
-          services: pl.servicesOffered ? pl.servicesOffered.split(',').map(s => s.trim()) : [],
-          capacity: pl.capacity || 'N/A',
-          status: pl.active ? 'open' : 'closed',
-          description: pl.description || 'No description',
-          contactPerson: pl.contactPerson || '',
-          contactPhone: pl.contactPhone || '',
-          contactEmail: pl.contactEmail || ''
-        }));
+      next: (listings: AidListing[]) => {
+        this.locations = listings;
         this.isLoading = false;
       },
       error: (error) => {

@@ -20,6 +20,9 @@ public class ListingRes {
 	private Date createdAt;
 	private String provider;
 	private String verificationStatus;
+	private String contactPerson;
+	private String contactEmail;
+	private String contactPhone;
 	private List<ListingFeedback> feedbacks;
 	
 	public ListingRes() {
@@ -52,6 +55,11 @@ public class ListingRes {
 		this.verificationStatus = (listing.getVerificationStatus() != null) 
 			? listing.getVerificationStatus() 
 			: "pending";
+
+		// Contact details
+		this.contactPerson = listing.getContactPerson();
+		this.contactEmail = listing.getContactEmail();
+		this.contactPhone = listing.getContactPhone();
 		
 		this.feedbacks = listing.getFeedbacks();
 	}
@@ -158,6 +166,30 @@ public class ListingRes {
 
 	public void setFeedbacks(List<ListingFeedback> feedbacks) {
 		this.feedbacks = feedbacks;
+	}
+
+	public String getContactPerson() {
+		return contactPerson;
+	}
+
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
+	}
+
+	public String getContactEmail() {
+		return contactEmail;
+	}
+
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
+
+	public String getContactPhone() {
+		return contactPhone;
+	}
+
+	public void setContactPhone(String contactPhone) {
+		this.contactPhone = contactPhone;
 	}
 
 	@Override

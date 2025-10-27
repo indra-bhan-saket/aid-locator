@@ -60,29 +60,6 @@ public class ListingService {
 	return null;
     }
     
-    public ProviderListing updateListing(ListingReq listing, String email) {
-    	User user = userService.getUserByEmail(email);
-    	if(user != null && listing.getId() != null) {
-    		ProviderListing existingListing = listingRepository.findById(listing.getId()).orElse(null);
-    		if(existingListing != null && existingListing.getUser().getId().equals(user.getId())) {
-    			existingListing.setActive(listing.isActive());
-    			existingListing.setCapacity(listing.getCapacity());
-    			existingListing.setGpsLat(listing.getGpsLat());
-    			existingListing.setGpsLng(listing.getGpsLng());
-    			existingListing.setServicesOffered(listing.getServicesOffered());
-    			existingListing.setName(listing.getName());
-    			existingListing.setAddress(listing.getAddress());
-    			existingListing.setDescription(listing.getDescription());
-    			existingListing.setContactPerson(listing.getContactPerson());
-    			existingListing.setContactEmail(listing.getContactEmail());
-    			existingListing.setContactPhone(listing.getContactPhone());
-    			existingListing.setPin(listing.getPin());
-    			return listingRepository.save(existingListing);
-    		}
-    	}
-    	return null;
-    }
-    
     public boolean deleteListing(Integer id, String email) {
     	User user = userService.getUserByEmail(email);
     	if (user != null) {

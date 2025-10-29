@@ -128,7 +128,7 @@ export class LoginModalComponent implements OnInit {
           this.isLoading = false;
           
           // Show success message in modal
-          this.successMessage = 'Registration successful!';
+          this.successMessage = 'Registration successful!. Please reach out to Admin for approval.';
           this.errorMessage = '';
           
           // Reset the register form

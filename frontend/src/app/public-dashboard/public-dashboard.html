@@ -28,7 +28,30 @@
       </div>
     }
 
+    <!-- Listings Loading/Error States -->
+    @if (isLoadingListings) {
+      <div class="alert alert-info mt-3" role="alert">
+        <div class="d-flex align-items-center">
+          <div class="spinner-border spinner-border-sm me-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <span>Loading listings...</span>
+        </div>
+      </div>
+    }
+
+    @if (listingsError) {
+      <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        <h5 class="alert-heading">Error Loading Listings:</h5>
+        <p class="mb-0">{{ listingsError }}</p>
+        <button type="button" class="btn btn-sm btn-outline-danger mt-2" (click)="loadListings()">
+          Retry
+        </button>
+      </div>
+    }
+
     <!-- Filter Services Section -->
+    @if (!isLoadingListings && !listingsError) {
     <div class="filter-section mt-4">
       <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
@@ -130,6 +153,7 @@
 
     <!-- Locations List Section -->
     <app-locations-list [locations]="filteredLocations" class="mt-4 mb-5"></app-locations-list>
+    }
 
   </div>
 </div>

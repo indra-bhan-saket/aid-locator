@@ -59,7 +59,7 @@ public class ListingService {
     	providerListing.setContactEmail(listing.getContactEmail());
     	providerListing.setContactPhone(listing.getContactPhone());
     	providerListing.setPin(listing.getPin());
-    	providerListing.setStatus(AidConstants.PENDING);
+    	providerListing.setStatus(listing.getStatus() != null ? listing.getStatus() : AidConstants.PENDING);
     	providerListing.setVerificationStatus(AidConstants.PENDING);
     	return listingRepository.save(providerListing);
     }
@@ -94,6 +94,10 @@ public class ListingService {
 	
 	public List<ProviderListing> getApprovedListings() {
 			return listingRepository.findByStatus(AidConstants.APPROVED);
+	}
+	
+	public List<ProviderListing> getVerifiedListings() {
+		return listingRepository.findByVerificationStatus(AidConstants.VERIFIED);
 	}
 	
 	public List<ProviderListing> getAllListings() {

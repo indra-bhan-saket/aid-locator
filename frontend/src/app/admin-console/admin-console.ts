@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { AidProvidersComponent } from './aid-providers/aid-providers';
 import { PendingApprovalsComponent } from './pending-approvals/pending-approvals';
 import { AllListingsComponent } from './all-listings/all-listings';
+import { ReportsIssuesComponent } from './reports-issues/reports-issues';
 
 @Component({
   selector: 'app-admin-console',
   standalone: true,
-  imports: [CommonModule, AidProvidersComponent, PendingApprovalsComponent, AllListingsComponent],
+  imports: [CommonModule, AidProvidersComponent, PendingApprovalsComponent, AllListingsComponent, ReportsIssuesComponent],
   templateUrl: './admin-console.html',
   styleUrl: './admin-console.css'
 })

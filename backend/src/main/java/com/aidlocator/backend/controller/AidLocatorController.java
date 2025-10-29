@@ -26,7 +26,7 @@ public class AidLocatorController {
        
     @GetMapping("/listings")
     public ResponseEntity<List<ListingRes>> getAllListings() {
-    	List<ProviderListing> providerListings = listingService.getApprovedListings();
+    	List<ProviderListing> providerListings = listingService.getVerifiedListings();
     	List<ListingRes> listingResponses = providerListings.stream()
     		.map(ListingRes::new)
     		.collect(Collectors.toList());

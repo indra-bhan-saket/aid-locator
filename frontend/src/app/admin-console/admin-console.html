@@ -14,13 +14,13 @@
       class="tab-button" 
       [class.active]="activeTab === 'pending-approvals'"
       (click)="setActiveTab('pending-approvals')">
-      Pending Approvals
+      Pending Listing Approvals
     </button>
     <button 
       class="tab-button" 
       [class.active]="activeTab === 'providers'"
       (click)="setActiveTab('providers')">
-      Providers
+      Providers List
     </button>
     <button 
       class="tab-button" 
@@ -55,8 +55,7 @@
     <!-- Reports & Issues Tab -->
     <div class="tab-content" *ngIf="activeTab === 'reports'">
       <div class="content-card">
-        <h2 class="section-title">Reports & Issues</h2>
-        <p class="placeholder-text">Reports and issues management coming soon...</p>
+        <app-reports-issues></app-reports-issues>
       </div>
     </div>
 

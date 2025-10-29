@@ -107,6 +107,7 @@ export class ListingModalComponent implements OnInit {
         contactPerson: formValue.contactPerson,
         contactEmail: formValue.contactEmail,
         contactPhone: formValue.contactPhone,
+        status: formValue.status,
         active: true,
         pin: formValue.pin === true
       };

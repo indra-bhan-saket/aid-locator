@@ -113,6 +113,29 @@
   color: #6b7280;
 }
 
+.verification-badge {
+  padding: 0.375rem 0.875rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.verification-verified {
+  background-color: #10b981;
+  color: white;
+}
+
+.verification-rejected {
+  background-color: #ef4444;
+  color: white;
+}
+
+.verification-pending {
+  background-color: #f59e0b;
+  color: white;
+}
+
 .btn-icon {
   background: transparent;
   border: none;

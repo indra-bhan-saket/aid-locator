@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { AidListing } from '../models/location.models';
+import { AidListing, ListingFeedback } from '../models/location.models';
 
 export interface ListingApproval {
   id: number;
@@ -22,6 +22,10 @@ interface ListingResponse {
   createdAt: string;
   provider: string;
   verificationStatus: string;
+  contactPerson?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  feedbacks?: ListingFeedback[];
 }
 
 @Injectable({
@@ -73,7 +77,11 @@ export class ListingService {
       description: response.description || '',
       provider: response.provider,
       submitted: response.createdAt ? new Date(response.createdAt).toLocaleString() : '',
-      verificationStatus: (response.verificationStatus?.toLowerCase() as 'verified' | 'pending' | 'rejected') || 'pending'
+      verificationStatus: (response.verificationStatus?.toLowerCase() as 'verified' | 'pending' | 'rejected') || 'pending',
+      contactPerson: response.contactPerson,
+      contactPhone: response.contactPhone,
+      contactEmail: response.contactEmail,
+      feedbacks: response.feedbacks || []
     };
   }
 

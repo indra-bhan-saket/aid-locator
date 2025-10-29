@@ -61,41 +61,50 @@
     <p class="description-text">{{ location.description }}</p>
   </div>
 
-  <!-- Comments Section -->
+  <!-- Report Issues Section -->
   <div class="comments-section mb-4">
     <div class="d-flex align-items-center mb-3">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-2">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
       </svg>
-      <h6 class="section-title mb-0">Comments (2)</h6>
+      <h6 class="section-title mb-0">Report Issues</h6>
     </div>
 
-    <!-- Comment Input -->
+    <!-- Error Message -->
+    @if (feedbackError) {
+      <div class="alert alert-danger alert-sm" role="alert">
+        {{ feedbackError }}
+      </div>
+    }
+
+    <!-- Issue Report Input -->
     <div class="comment-input-section mb-3">
       <textarea 
         class="form-control comment-textarea" 
-        placeholder="Share your experience or ask a question..."
-        rows="3"></textarea>
+        placeholder="Report any issues or concerns about this location..."
+        rows="3"
+        [(ngModel)]="newComment"
+        [disabled]="isPostingComment"></textarea>
       <div class="d-flex justify-content-between align-items-center mt-2">
-        <small class="text-muted">Comments are posted anonymously</small>
-        <button type="button" class="btn btn-secondary btn-sm px-4">Post Comment</button>
-      </div>
-    </div>
-
-    <!-- Existing Comments -->
-    <div class="comments-list">
-      <div class="comment-item">
-        <div class="d-flex justify-content-between align-items-start mb-2">
-          <span class="comment-author">Anonymous</span>
-          <span class="comment-date">15/01/2024, 20:00:00</span>
-        </div>
-        <p class="comment-text mb-0">Great facilities, very helpful staff.</p>
+        <!-- <small class="text-muted">Reports are submitted anonymously</small> -->
+        <button 
+          type="button" 
+          class="btn btn-danger btn-sm px-4"
+          (click)="postComment()"
+          [disabled]="!newComment.trim() || isPostingComment">
+          @if (isPostingComment) {
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          }
+          Report Issue
+        </button>
       </div>
     </div>
   </div>
 
   <!-- Report Issue Button -->
-  <div class="report-section">
+  <div class="report-section d-none">
     <button type="button" class="btn btn-link text-danger p-0" (click)="reportIssue()">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
         <circle cx="12" cy="12" r="10"></circle>

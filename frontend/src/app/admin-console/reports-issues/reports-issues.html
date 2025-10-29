@@ -1,0 +1,64 @@
+<div class="reports-issues">
+  <h2 class="section-title">Reports & Issues</h2>
+  
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="alert alert-info d-flex align-items-center" role="alert">
+    <div class="spinner-border spinner-border-sm me-2" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <span>Loading reports...</span>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="alert alert-danger" role="alert">
+    <strong>Error:</strong> {{ errorMessage }}
+  </div>
+
+  <div class="reports-table" *ngIf="!isLoading">
+    <!-- Desktop Table Header -->
+    <div class="table-header desktop-only">
+      <div class="col-header">Location Name</div>
+      <div class="col-header">Feedback/Issue</div>
+      <div class="col-header">Submitted At</div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="reports.length === 0" class="alert alert-info" role="alert">
+      No reports or issues found.
+    </div>
+
+    <!-- Table Rows -->
+    <div class="table-row" *ngFor="let report of reports">
+      <div class="col-location">
+        <span class="mobile-label">Location Name:</span>
+        <span class="location-name">{{ report.listingName || 'Not Available' }}</span>
+      </div>
+
+      <div class="col-feedback">
+        <span class="mobile-label">Feedback/Issue:</span>
+        <div class="feedback-text">{{ report.feedback }}</div>
+      </div>
+      
+      <div class="col-date">
+        <span class="mobile-label">Submitted:</span>
+        <span class="date-text">{{ formatDate(report.createdAt) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-container">
+    <div class="pagination-info">
+      Showing {{ (page - 1) * pageSize + 1 }} to {{ Math.min(page * pageSize, collectionSize) }} of {{ collectionSize }} entries
+    </div>
+    <ngb-pagination
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [collectionSize]="collectionSize"
+      [maxSize]="5"
+      [rotate]="true"
+      [boundaryLinks]="true"
+      (pageChange)="onPageChange($event)">
+    </ngb-pagination>
+  </div>
+</div>

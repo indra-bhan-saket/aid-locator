@@ -1,5 +1,5 @@
 <div class="pending-approvals">
-  <h2 class="section-title">Listing Pending Approval</h2>
+  <h2 class="section-title">Pending Listing Approvals ({{ collectionSize }})</h2>
   
   <!-- Loading State -->
   <div *ngIf="isLoading" class="alert alert-info d-flex align-items-center" role="alert">
@@ -10,8 +10,8 @@
   </div>
 
   <!-- Error State -->
-  <div *ngIf="errorMessage && !isLoading" class="alert alert-warning" role="alert">
-    <strong>Warning:</strong> {{ errorMessage }}. Showing sample data.
+  <div *ngIf="errorMessage && !isLoading" class="alert alert-danger" role="alert">
+    <strong>Error:</strong> {{ errorMessage }}
   </div>
 
   <div class="locations-table" *ngIf="!isLoading">
@@ -56,8 +56,11 @@
       
       <div class="col-status">
         <span class="mobile-label">Status:</span>
-        <span class="status-badge" [class.status-open]="listing.status === 'open'" [class.status-full]="listing.status === 'full'">
-          {{ listing.status }}
+        <span class="status-badge" 
+              [class.status-verified]="listing.verificationStatus === 'verified'" 
+              [class.status-pending]="listing.verificationStatus === 'pending'"
+              [class.status-rejected]="listing.verificationStatus === 'rejected'">
+          {{ listing.verificationStatus }}
         </span>
       </div>
       
@@ -92,6 +95,22 @@
           </button>
         </div>
       </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container" *ngIf="!isLoading && collectionSize > 0">
+      <div class="pagination-info">
+        Showing {{ Math.min((page - 1) * pageSize + 1, collectionSize) }} to {{ Math.min(page * pageSize, collectionSize) }} of {{ collectionSize }} entries
+      </div>
+      <ngb-pagination 
+        [(page)]="page" 
+        [pageSize]="pageSize" 
+        [collectionSize]="collectionSize" 
+        [maxSize]="5" 
+        [rotate]="true" 
+        [boundaryLinks]="true"
+        (pageChange)="onPageChange($event)">
+      </ngb-pagination>
     </div>
   </div>
 </div>

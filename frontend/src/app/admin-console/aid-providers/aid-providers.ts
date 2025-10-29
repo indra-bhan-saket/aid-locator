@@ -1,19 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { User } from '../../models/auth.models';
 import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-aid-providers',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgbPaginationModule],
   templateUrl: './aid-providers.html',
   styleUrl: './aid-providers.css'
 })
 export class AidProvidersComponent implements OnInit {
+  allProviders: User[] = [];
   providers: User[] = [];
   isLoading = false;
   errorMessage = '';
+
+  // Pagination properties
+  page = 1;
+  pageSize = 10;
+  collectionSize = 0;
+  Math = Math;
 
   constructor(private userService: UserService) {}
 
@@ -28,9 +36,11 @@ export class AidProvidersComponent implements OnInit {
     this.userService.getAllUsers().subscribe({
       next: (users) => {
         // Filter to show only providers or show all based on requirements
-        this.providers = users.filter(user => user.role?.toLowerCase() === 'provider');
+        this.allProviders = users.filter(user => user.role?.toLowerCase() === 'provider');
+        this.collectionSize = this.allProviders.length;
+        this.refreshProviders();
         this.isLoading = false;
-        console.log('Providers loaded:', this.providers);
+        console.log('Providers loaded:', this.allProviders);
       },
       error: (error) => {
         console.error('Error loading providers:', error);
@@ -42,9 +52,21 @@ export class AidProvidersComponent implements OnInit {
     });
   }
 
+  refreshProviders(): void {
+    const startIndex = (this.page - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.providers = this.allProviders.slice(startIndex, endIndex);
+  }
+
+  onPageChange(page: number): void {
+    this.page = page;
+    this.refreshProviders();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   loadSampleData(): void {
     // Fallback sample data
-    this.providers = [
+    this.allProviders = [
       {
         id: 1,
         name: 'Red Cross Emergency Response',
@@ -97,6 +119,8 @@ export class AidProvidersComponent implements OnInit {
         locationCount: 1
       }
     ];
+    this.collectionSize = this.allProviders.length;
+    this.refreshProviders();
   }
 
   viewProvider(provider: User) {

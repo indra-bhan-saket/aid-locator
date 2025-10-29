@@ -22,57 +22,10 @@ export class PublicDashboardComponent implements OnInit, OnDestroy {
   // Filter related properties
   activeFilters: string[] = [];
   
-  // Locations data - only approved listings
-  locations: AidListing[] = [
-    {
-      id: 1,
-      name: 'Central Community Center',
-      address: '123 Main St, Downtown',
-      latitude: '40.7128',
-      longitude: '-74.0060',
-      services: ['food', 'shelter', 'water', 'child-safe'],
-      capacity: '200 people',
-      status: 'open',
-      description: 'Large community center with full kitchen facilities and sleeping areas.',
-      verificationStatus: 'verified'
-    },
-    {
-      id: 2,
-      name: 'Riverside Emergency Shelter',
-      address: '456 River Rd, Riverside',
-      latitude: '40.7580',
-      longitude: '-73.9855',
-      services: ['shelter', 'water', 'toilets', 'disabled-access'],
-      capacity: '150 people',
-      status: 'open',
-      description: 'Temporary shelter with accessible facilities.',
-      verificationStatus: 'verified'
-    },
-    {
-      id: 3,
-      name: 'Food Distribution Point',
-      address: '789 Oak Ave, Westside',
-      latitude: '40.7489',
-      longitude: '-73.9680',
-      services: ['food', 'water', 'pet-friendly'],
-      capacity: '500 meals/day',
-      status: 'open',
-      description: 'Mobile food distribution with pet-friendly area.',
-      verificationStatus: 'verified'
-    },
-    {
-      id: 4,
-      name: 'Emergency Medical Station',
-      address: '321 Health Plaza, Medical District',
-      latitude: '40.7614',
-      longitude: '-73.9776',
-      services: ['water', 'toilets', 'medical'],
-      capacity: '100 people',
-      status: 'full',
-      description: 'Medical station with trained staff and equipment.',
-      verificationStatus: 'verified'
-    }
-  ];
+  // Locations data - loaded from API
+  locations: AidListing[] = [];
+  isLoadingListings: boolean = true;
+  listingsError: string = '';
   
   private healthCheckSubscription?: Subscription;
   
@@ -91,10 +44,52 @@ export class PublicDashboardComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient, private healthCheckService: HealthCheckService) {}
 
   ngOnInit() {
+    // Load listings on component initialization
+    this.loadListings();
+    
     // Subscribe to health check requests from header
     this.healthCheckSubscription = this.healthCheckService.healthCheckRequest$.subscribe(() => {
       this.checkHealth();
     });
+  }
+
+  loadListings() {
+    this.isLoadingListings = true;
+    this.listingsError = '';
+
+    this.http.get<any[]>('/api/public/listings').subscribe({
+      next: (response) => {
+        this.locations = response.map(listing => this.mapBackendToAidListing(listing));
+        this.isLoadingListings = false;
+      },
+      error: (error) => {
+        this.listingsError = `Failed to load listings: ${error.message || 'Unknown error'}`;
+        this.isLoadingListings = false;
+        console.error('Error loading listings:', error);
+      }
+    });
+  }
+
+  private mapBackendToAidListing(backendListing: any): AidListing {
+    return {
+      id: backendListing.id,
+      name: backendListing.name || '',
+      address: backendListing.address || '',
+      latitude: backendListing.gpsLat || '0',
+      longitude: backendListing.gpsLng || '0',
+      services: backendListing.servicesOffered 
+        ? backendListing.servicesOffered.split(',').map((s: string) => s.trim()).filter((s: string) => s) 
+        : [],
+      capacity: backendListing.capacity || 'N/A',
+      status: backendListing.status || 'closed',
+      description: backendListing.description || 'No description available',
+      contactPerson: backendListing.contactPerson || '',
+      contactPhone: backendListing.contactPhone || '',
+      contactEmail: backendListing.contactEmail || '',
+      provider: backendListing.provider || '',
+      verificationStatus: backendListing.verificationStatus || 'pending',
+      feedbacks: backendListing.feedbacks || []
+    };
   }
 
   checkHealth() {

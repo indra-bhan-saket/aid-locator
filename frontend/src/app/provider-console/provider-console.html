@@ -50,6 +50,14 @@
           <span class="status-badge" [ngClass]="'status-' + location.status">
             {{ location.status }}
           </span>
+          <span class="verification-badge" 
+                [ngClass]="{
+                  'verification-verified': location.verificationStatus === 'verified',
+                  'verification-rejected': location.verificationStatus === 'rejected',
+                  'verification-pending': location.verificationStatus === 'pending'
+                }">
+            {{ location.verificationStatus }}
+          </span>
           <button class="btn-icon" (click)="editLocation(location)" title="Edit">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>

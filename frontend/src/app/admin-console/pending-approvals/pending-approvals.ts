@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { ListingDetailsModalComponent } from '../../shared/listing-details-modal/listing-details-modal';
 import { AidListing, getServiceIcon } from '../../models/location.models';
 import { ListingService } from '../../services/listing.service';
@@ -8,14 +8,21 @@ import { ListingService } from '../../services/listing.service';
 @Component({
   selector: 'app-pending-approvals',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgbPaginationModule],
   templateUrl: './pending-approvals.html',
   styleUrl: './pending-approvals.css'
 })
 export class PendingApprovalsComponent implements OnInit {
+  allPendingListings: AidListing[] = [];
   pendingListings: AidListing[] = [];
   isLoading = false;
   errorMessage = '';
+
+  // Pagination properties
+  page = 1;
+  pageSize = 10;
+  collectionSize = 0;
+  Math = Math;
 
   constructor(
     private modalService: NgbModal,
@@ -32,60 +39,30 @@ export class PendingApprovalsComponent implements OnInit {
 
     this.listingService.getAllPendingListings().subscribe({
       next: (listings) => {
-        this.pendingListings = listings;
+        this.allPendingListings = listings;
+        this.collectionSize = listings.length;
+        this.refreshListings();
         this.isLoading = false;
-        console.log('Listings loaded:', this.pendingListings);
+        console.log('Listings loaded:', this.allPendingListings);
       },
       error: (error) => {
         console.error('Error loading listings:', error);
         this.errorMessage = error.message || 'Failed to load listings';
         this.isLoading = false;
-        // Fallback to sample data for development
-        this.loadSampleData();
       }
     });
   }
 
-  loadSampleData(): void {
-    // Fallback sample data
-    this.pendingListings = [
-      {
-        id: 1,
-        name: 'Central Community Center',
-        address: '123 Main St, Downtown',
-        provider: 'Red Cross Emergency Response',
-        services: ['shelter', 'food', 'water'],
-        status: 'open',
-        submitted: '15/01/2024, 13:30:00',
-        capacity: '200 people',
-        description: 'Large community center with multiple rooms and facilities.',
-        verificationStatus: 'pending'
-      },
-      {
-        id: 2,
-        name: 'Riverside Emergency Shelter',
-        address: '456 River Rd, Riverside',
-        provider: 'Community Aid Network',
-        services: ['food', 'water', 'toilets', 'disabled-access'],
-        status: 'open',
-        submitted: '14/01/2024, 17:30:00',
-        capacity: '150 people',
-        description: 'Temporary shelter with accessible facilities.',
-        verificationStatus: 'pending'
-      },
-      {
-        id: 3,
-        name: 'Emergency Medical Station',
-        address: '321 Health Plaza, Medical District',
-        provider: 'Emergency Medical Services',
-        services: ['water', 'toilets', 'medical'],
-        status: 'full',
-        submitted: '13/01/2024, 19:30:00',
-        capacity: '100 people',
-        description: 'Medical station with trained staff and equipment.',
-        verificationStatus: 'pending'
-      }
-    ];
+  refreshListings(): void {
+    const startIndex = (this.page - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.pendingListings = this.allPendingListings.slice(startIndex, endIndex);
+  }
+
+  onPageChange(page: number): void {
+    this.page = page;
+    this.refreshListings();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   viewListing(listing: AidListing) {
@@ -127,13 +104,14 @@ export class PendingApprovalsComponent implements OnInit {
     this.listingService.approveListing(approvalData).subscribe({
       next: (result) => {
         console.log(`Listing ${action} successfully:`, result);
-        // Update the listing in the local array
-        const index = this.pendingListings.findIndex(l => l.id === listing.id);
+        // Update the listing in both arrays
+        const index = this.allPendingListings.findIndex(l => l.id === listing.id);
         if (index !== -1) {
-          this.pendingListings.splice(index, 1);
+          this.allPendingListings.splice(index, 1);
+          this.collectionSize = this.allPendingListings.length;
         }
-        // Optionally reload the listings
-        // this.loadListings();
+        // Refresh current page
+        this.refreshListings();
       },
       error: (error) => {
         console.error(`Error ${action.slice(0, -1)}ing listing:`, error);

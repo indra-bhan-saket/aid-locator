@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aidlocator.backend.common.dto.AnalyticsDto;
 import com.aidlocator.backend.common.dto.FeedbackDto;
+import com.aidlocator.backend.common.dto.ListingFeedbackRes;
 import com.aidlocator.backend.common.entities.Analytics;
 import com.aidlocator.backend.common.entities.ListingFeedback;
 import com.aidlocator.backend.common.services.AnalyticsService;
@@ -43,8 +44,8 @@ public class ReportingController {
 	}
 
 	@GetMapping("/feedback")
-	public ResponseEntity<List<ListingFeedback>> getAllFeedbacks() {
-		List<ListingFeedback> listingFeedbacks = feedbackService.getAllListingFeedbacks();
+	public ResponseEntity<List<ListingFeedbackRes>> getAllFeedbacks() {
+		List<ListingFeedbackRes> listingFeedbacks = feedbackService.getAllListingFeedbacksRes();
 		return ResponseEntity.ok(listingFeedbacks);
 	}
 

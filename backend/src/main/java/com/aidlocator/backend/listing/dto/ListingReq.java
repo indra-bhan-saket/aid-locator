@@ -25,6 +25,8 @@ public class ListingReq {
     
     private String capacity;
     
+    private String status;
+    
     private String contactPerson;
     
     private String contactEmail;
@@ -125,6 +127,14 @@ public class ListingReq {
 
 	public void setContactPhone(String contactPhone) {
 		this.contactPhone = contactPhone;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	@Override

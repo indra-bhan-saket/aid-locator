@@ -10,34 +10,102 @@
 
 <div class="modal-body">
   <div class="location-info">
-    <div class="info-row">
-      <div class="info-label">Address:</div>
-      <div class="info-value">{{ listing.address }}</div>
-      
-      <div class="info-label">Status:</div>
-      <div class="info-value">{{ listing.status }}</div>
-    </div>
+    <!-- Two Column Layout: Info on left, Map on right -->
+    <div class="info-map-container">
+      <!-- Left Column: Information -->
+      <div class="info-column">
+        <!-- Status Badges Section -->
+        <div class="badges-section">
+          <span class="status-badge" 
+                [class.status-open]="listing.status === 'open'"
+                [class.status-closed]="listing.status === 'closed'"
+                [class.status-full]="listing.status === 'full'">
+            {{ listing.status }}
+          </span>
+          <span class="verification-badge"
+                [class.badge-verified]="listing.verificationStatus === 'verified'"
+                [class.badge-pending]="listing.verificationStatus === 'pending'"
+                [class.badge-rejected]="listing.verificationStatus === 'rejected'">
+            {{ listing.verificationStatus || 'pending' }}
+          </span>
+        </div>
 
-    <div class="info-row">
-      <div class="info-label">Capacity:</div>
-      <div class="info-value">{{ listing.capacity || 'N/A' }}</div>
-      
-      <div class="info-label">Verification Status:</div>
-      <div class="info-value">
-        <span [class.text-success]="listing.verificationStatus === 'verified'"
-              [class.text-danger]="listing.verificationStatus === 'rejected'"
-              [class.text-secondary]="listing.verificationStatus === 'pending'">
-          {{ listing.verificationStatus || 'pending' }}
-        </span>
+        <div class="info-row">
+          <div class="info-label">Address:</div>
+          <div class="info-value">{{ listing.address }}</div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-label">Capacity:</div>
+          <div class="info-value">{{ listing.capacity || 'N/A' }}</div>
+        </div>
+
+        <div class="info-row" *ngIf="listing.description">
+          <div class="info-label">Description:</div>
+          <div class="info-value description">{{ listing.description }}</div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-label">Contact Information:</div>
+          <div class="contact-info">
+            <div class="contact-item" *ngIf="listing.contactPerson">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span><strong>Name:</strong> {{ listing.contactPerson }}</span>
+            </div>
+            <div class="contact-item" *ngIf="listing.contactPhone">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <span><strong>Phone:</strong> {{ listing.contactPhone }}</span>
+            </div>
+            <div class="contact-item" *ngIf="listing.contactEmail">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span><strong>Email:</strong> {{ listing.contactEmail }}</span>
+            </div>
+            <div class="contact-item" *ngIf="!listing.contactPerson && !listing.contactPhone && !listing.contactEmail">
+              <span class="text-muted">No contact information available</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Google Maps -->
+      <div class="map-column" *ngIf="listing.latitude && listing.longitude">
+        <div class="map-container">
+          <google-map
+            [center]="mapCenter"
+            [zoom]="mapZoom"
+            [options]="mapOptions"
+            width="100%"
+            height="100%">
+            <map-marker
+              [position]="markerPosition"
+              [options]="markerOptions"
+              (mapClick)="openInfoWindow(marker)"
+              #marker="mapMarker">
+            </map-marker>
+            <map-info-window #infoWindow="mapInfoWindow">
+              <div class="info-window-content">
+                <h6>{{ listing.name }}</h6>
+                <p class="mb-2">{{ listing.address }}</p>
+                <a [href]="getGoogleMapsUrl()" target="_blank" class="maps-link">
+                  Open in Google Maps →
+                </a>
+              </div>
+            </map-info-window>
+          </google-map>
+        </div>
       </div>
     </div>
 
-    <div class="info-section" *ngIf="listing.description">
-      <div class="info-label">Description:</div>
-      <div class="info-value description">{{ listing.description }}</div>
-    </div>
-
-    <div class="info-section">
+    <!-- Services Section (Full Width Below) -->
+    <div class="info-section services-section">
       <div class="info-label">Services:</div>
       <div class="services-list">
         <span *ngFor="let service of listing.services" class="service-badge">

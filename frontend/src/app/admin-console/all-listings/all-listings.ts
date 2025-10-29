@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { ListingDetailsModalComponent } from '../../shared/listing-details-modal/listing-details-modal';
 import { AidListing, getServiceIcon } from '../../models/location.models';
 import { ListingService } from '../../services/listing.service';
@@ -8,14 +8,23 @@ import { ListingService } from '../../services/listing.service';
 @Component({
   selector: 'app-all-listings',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgbPaginationModule],
   templateUrl: './all-listings.html',
   styleUrl: './all-listings.css'
 })
 export class AllListingsComponent implements OnInit {
   listings: AidListing[] = [];
+  allListings: AidListing[] = [];
   isLoading = false;
   errorMessage = '';
+
+  // Pagination properties
+  page: number = 1;
+  pageSize: number = 9; // 3x3 grid
+  collectionSize: number = 0;
+
+  // Expose Math for template
+  Math = Math;
 
   constructor(
     private modalService: NgbModal,
@@ -32,64 +41,31 @@ export class AllListingsComponent implements OnInit {
 
     this.listingService.getAllListings().subscribe({
       next: (listings) => {
-        this.listings = listings;
+        this.allListings = listings;
+        this.collectionSize = this.allListings.length;
+        this.refreshListings();
         this.isLoading = false;
-        console.log('All listings loaded:', this.listings);
+        console.log('All listings loaded:', this.allListings);
       },
       error: (error) => {
         console.error('Error loading listings:', error);
         this.errorMessage = error.message || 'Failed to load listings';
         this.isLoading = false;
-        // Fallback to sample data for development
-        this.loadSampleData();
       }
     });
   }
 
-  loadSampleData(): void {
-    // Fallback sample data
-    this.listings = [
-    {
-      id: 1,
-      name: 'Central Community Center',
-      address: '123 Main St, Downtown',
-      services: ['food', 'shelter', 'water', 'child-safe'],
-      verificationStatus: 'verified',
-      status: 'open',
-      capacity: '200 people',
-      description: 'Large community center with multiple rooms and facilities.'
-    },
-    {
-      id: 2,
-      name: 'Riverside Emergency Shelter',
-      address: '456 River Rd, Riverside',
-      services: ['shelter', 'water', 'toilets', 'disabled-access'],
-      verificationStatus: 'pending',
-      status: 'open',
-      capacity: '150 people',
-      description: 'Temporary shelter with accessible facilities.'
-    },
-    {
-      id: 3,
-      name: 'Food Distribution Point',
-      address: '789 Oak Ave, Westside',
-      services: ['food', 'water', 'pet-friendly'],
-      verificationStatus: 'verified',
-      status: 'open',
-      capacity: '100 people',
-      description: 'Food distribution center operating daily.'
-    },
-    {
-      id: 4,
-      name: 'Emergency Medical Station',
-      address: '321 Health Plaza, Medical District',
-      services: ['water', 'toilets', 'medical'],
-      verificationStatus: 'verified',
-      status: 'full',
-      capacity: '100 people',
-      description: 'Medical station with trained staff and equipment.'
-    }
-    ];
+  refreshListings(): void {
+    const startIndex = (this.page - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.listings = this.allListings.slice(startIndex, endIndex);
+  }
+
+  onPageChange(page: number): void {
+    this.page = page;
+    this.refreshListings();
+    // Scroll to top of listings
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   viewListing(listing: AidListing) {

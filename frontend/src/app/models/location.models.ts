@@ -7,6 +7,16 @@ export interface Service {
   label: string;
 }
 
+// Feedback for a listing
+export interface ListingFeedback {
+  id: number;
+  listingId?: number;
+  listingName?: string;
+  feedback: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Location entity used in provider console and listings
 export interface AidListing {
   id: number;
@@ -24,6 +34,7 @@ export interface AidListing {
   provider?: string;
   submitted?: string;
   verificationStatus?: 'verified' | 'pending' | 'rejected';
+  feedbacks?: ListingFeedback[];
 }
 
 // Location details for display modal

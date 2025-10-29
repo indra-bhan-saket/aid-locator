@@ -1,10 +1,12 @@
 package com.aidlocator.backend.common.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.aidlocator.backend.common.dto.FeedbackDto;
+import com.aidlocator.backend.common.dto.ListingFeedbackRes;
 import com.aidlocator.backend.common.entities.ListingFeedback;
 import com.aidlocator.backend.common.repositories.FeedbackRepository;
 import com.aidlocator.backend.listing.ProviderListing;
@@ -43,6 +45,26 @@ public class FeedbackService {
 
 	public List<ListingFeedback> getAllListingFeedbacks() {
 		return (List<ListingFeedback>) feedbackRepository.findAll();
+	}
+
+	public List<ListingFeedbackRes> getAllListingFeedbacksRes() {
+		List<ListingFeedback> feedbacks = (List<ListingFeedback>) feedbackRepository.findAll();
+		return feedbacks.stream().map(this::convertToRes).collect(Collectors.toList());
+	}
+
+	private ListingFeedbackRes convertToRes(ListingFeedback feedback) {
+		ListingFeedbackRes res = new ListingFeedbackRes();
+		res.setId(feedback.getId());
+		res.setFeedback(feedback.getFeedback());
+		res.setCreatedAt(feedback.getCreatedAt());
+		res.setUpdatedAt(feedback.getUpdatedAt());
+		
+		if (feedback.getProviderListing() != null) {
+			res.setListingId(feedback.getProviderListing().getId().longValue());
+			res.setListingName(feedback.getProviderListing().getName());
+		}
+		
+		return res;
 	}
 	
 	public Boolean deleteComment(Integer id) {

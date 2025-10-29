@@ -16,6 +16,7 @@ export interface ListingDto {
   contactPerson: string;
   contactEmail: string;
   contactPhone: string;
+  status: string;
   active: boolean;
   pin: boolean; // backend expects boolean
 }
@@ -65,7 +66,8 @@ export class ProviderListingService {
       contactPhone: res.contactPhone || '',
       contactEmail: res.contactEmail || '',
       provider: res.provider,
-      verificationStatus: (res.verificationStatus as any) || 'pending'
+      verificationStatus: (res.verificationStatus as any) || 'pending',
+      feedbacks: res.feedbacks || []
     };
   }
 }

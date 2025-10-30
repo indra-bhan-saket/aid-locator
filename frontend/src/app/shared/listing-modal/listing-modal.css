@@ -153,6 +153,58 @@ textarea.form-control {
   font-size: 0.75rem;
 }
 
+/* Map Picker Styles */
+.map-picker-container {
+  margin-bottom: 1.25rem;
+}
+
+.map-picker-container .form-label {
+  text-align: center;
+  font-weight: 600;
+}
+
+.map-picker-container .form-text {
+  font-style: italic;
+}
+
+.map-wrapper {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+.form-check-input {
+  width: 1.125rem;
+  height: 1.125rem;
+  cursor: pointer;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  margin: 0;
+}
+
+.form-check-input:checked {
+  background-color: #1a1a1a;
+  border-color: #1a1a1a;
+}
+
+.form-check-label {
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  font-size: 0.938rem;
+  margin: 0;
+}
+
 /* Form Row for side-by-side fields */
 .form-row {
   display: flex;
@@ -281,6 +333,10 @@ textarea.form-control {
   .btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .map-wrapper google-map {
+    height: 250px !important;
   }
 }
 

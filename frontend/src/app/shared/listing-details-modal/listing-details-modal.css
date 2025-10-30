@@ -47,6 +47,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
+  align-items: stretch;
 }
 
 .info-column {
@@ -56,14 +57,14 @@
 }
 
 .map-column {
-  position: sticky;
-  top: 0;
-  height: fit-content;
+  display: flex;
+  flex-direction: column;
 }
 
 .map-container {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  flex: 1;
+  min-height: 400px;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #e5e7eb;

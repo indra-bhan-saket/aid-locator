@@ -1,14 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { GoogleMapsModule } from '@angular/google-maps';
 import { AidListing } from '../../models/location.models';
 import { ProviderListingService, ListingDto } from '../../services/provider-listing.service';
 
 @Component({
   selector: 'app-listing-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, GoogleMapsModule],
   templateUrl: './listing-modal.html',
   styleUrls: ['./listing-modal.css']
 })
@@ -19,6 +20,26 @@ export class ListingModalComponent implements OnInit {
   listingForm!: FormGroup;
   isLoading: boolean = false;
   errorMessage: string = '';
+  useMapPicker: boolean = false;
+
+  // Map configuration
+  mapCenter: { lat: number; lng: number } = { lat: 40.7128, lng: -74.0060 }; // Default to NYC
+  mapZoom = 12;
+  mapOptions: any = {
+    mapTypeId: 'roadmap',
+    zoomControl: true,
+    scrollwheel: true,
+    disableDoubleClickZoom: false,
+    maxZoom: 20,
+    minZoom: 3,
+    streetViewControl: false,
+    fullscreenControl: false,
+    mapTypeControl: false
+  };
+  markerPosition: { lat: number; lng: number } | null = null;
+  markerOptions: any = {
+    draggable: true
+  };
 
   // Available services with icons
   availableServices = [
@@ -40,6 +61,39 @@ export class ListingModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+    this.getUserLocation();
+    this.loadGoogleMapsScript();
+  }
+
+  loadGoogleMapsScript(): void {
+    // Check if Google Maps is already loaded
+    if (typeof (window as any).google !== 'undefined' && (window as any).google.maps) {
+      return;
+    }
+
+    // Load Google Maps script if not already loaded
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyABKWzsGxHE_Xgq0d3hHssyq5V7GHgBoL8`;
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+  }
+
+  getUserLocation(): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.mapCenter = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          this.mapZoom = 13;
+        },
+        (error) => {
+          console.warn('Error getting user location:', error);
+        }
+      );
+    }
   }
 
   initializeForm(): void {
@@ -59,6 +113,60 @@ export class ListingModalComponent implements OnInit {
       contactEmail: [this.locationData?.contactEmail || '', [Validators.required, Validators.email]],
       services: [selectedServices],
       pin: [false]
+    });
+
+    // Initialize map marker if editing with existing coordinates
+    if (this.locationData?.latitude && this.locationData?.longitude) {
+      const lat = parseFloat(this.locationData.latitude);
+      const lng = parseFloat(this.locationData.longitude);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        this.markerPosition = { lat, lng };
+        this.mapCenter = { lat, lng };
+      }
+    }
+  }
+
+  toggleMapPicker(event: any): void {
+    this.useMapPicker = event.target.checked;
+    
+    if (this.useMapPicker) {
+      // If switching to map picker, try to use existing lat/lng values
+      const lat = parseFloat(this.listingForm.get('latitude')?.value);
+      const lng = parseFloat(this.listingForm.get('longitude')?.value);
+      
+      if (!isNaN(lat) && !isNaN(lng)) {
+        this.markerPosition = { lat, lng };
+        this.mapCenter = { lat, lng };
+      } else {
+        // Use current map center as marker position
+        this.markerPosition = { ...this.mapCenter };
+        this.updateFormCoordinates(this.mapCenter.lat, this.mapCenter.lng);
+      }
+    }
+  }
+
+  onMapClick(event: any): void {
+    if (event.latLng) {
+      const lat = event.latLng.lat();
+      const lng = event.latLng.lng();
+      this.markerPosition = { lat, lng };
+      this.updateFormCoordinates(lat, lng);
+    }
+  }
+
+  onMarkerDragEnd(event: any): void {
+    if (event.latLng) {
+      const lat = event.latLng.lat();
+      const lng = event.latLng.lng();
+      this.markerPosition = { lat, lng };
+      this.updateFormCoordinates(lat, lng);
+    }
+  }
+
+  updateFormCoordinates(lat: number, lng: number): void {
+    this.listingForm.patchValue({
+      latitude: lat.toFixed(6),
+      longitude: lng.toFixed(6)
     });
   }
 

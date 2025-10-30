@@ -19,6 +19,7 @@ export class PublicListingDetailComponent implements OnInit {
   feedbacks: ListingFeedback[] = [];
   isPostingComment: boolean = false;
   feedbackError: string = '';
+  feedbackSuccess: string = '';
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -47,6 +48,7 @@ export class PublicListingDetailComponent implements OnInit {
 
     this.isPostingComment = true;
     this.feedbackError = '';
+    this.feedbackSuccess = '';
 
     this.feedbackService.postFeedback(this.location.id, this.newComment).subscribe({
       next: (feedback) => {
@@ -61,6 +63,12 @@ export class PublicListingDetailComponent implements OnInit {
         // Clear the input
         this.newComment = '';
         this.isPostingComment = false;
+        this.feedbackSuccess = 'Thank you for reporting the issue!';
+        
+        // Clear success message after 5 seconds
+        setTimeout(() => {
+          this.feedbackSuccess = '';
+        }, 5000);
       },
       error: (error) => {
         console.error('Error posting comment:', error);

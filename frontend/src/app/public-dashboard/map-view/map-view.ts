@@ -47,13 +47,11 @@ export class MapViewComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     // Update markers when locations input changes
-    if (this.locations && this.locations.length > 0) {
-      this.createMarkers();
-      if (this.markers.length > 0) {
-        // Center map on first location if no user location
-        const firstMarker = this.markers[0];
-        this.center = firstMarker.position;
-      }
+    this.createMarkers();
+    if (this.markers.length > 0) {
+      // Center map on first location if no user location
+      const firstMarker = this.markers[0];
+      this.center = firstMarker.position;
     }
   }
 
@@ -146,5 +144,12 @@ export class MapViewComponent implements OnInit, OnChanges {
 
   getStatusClass(status: string): string {
     return status === 'open' ? 'status-open' : 'status-closed';
+  }
+
+  getGoogleMapsUrl(location: AidListing): string {
+    if (location.latitude && location.longitude) {
+      return `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
+    }
+    return '#';
   }
 }

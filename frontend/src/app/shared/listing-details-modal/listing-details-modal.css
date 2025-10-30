@@ -111,12 +111,12 @@
 }
 
 .status-badge.status-closed {
-  background-color: #6b7280;
+  background-color: #000000;
   color: white;
 }
 
 .status-badge.status-full {
-  background-color: #ef4444;
+  background-color: #000000;
   color: white;
 }
 

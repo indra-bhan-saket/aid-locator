@@ -89,7 +89,6 @@ export function getServiceIcon(serviceName: string): string {
     'child-safe': '👶',
     'free-wifi': '📶',
     'medical': '⚕️',
-    'wifi': '📶',
     'clothing': '👕'
   };
   

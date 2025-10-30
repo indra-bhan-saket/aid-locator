@@ -28,7 +28,7 @@ export class ListingModalComponent implements OnInit {
     { name: 'medical', icon: '⚕️', label: 'Medical' },
     { name: 'child-safe', icon: '👶', label: 'Child-Safe' },
     { name: 'pet-friendly', icon: '🐕', label: 'Pet-Friendly' },
-    { name: 'wifi', icon: '📶', label: 'WiFi' },
+    { name: 'free-wifi', icon: '📶', label: 'Free Wi-Fi' },
     { name: 'clothing', icon: '👕', label: 'Clothing' }
   ];
 

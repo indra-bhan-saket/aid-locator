@@ -21,6 +21,8 @@ export class PublicDashboardComponent implements OnInit, OnDestroy {
   
   // Filter related properties
   activeFilters: string[] = [];
+  activeRadiusKm: number | null = null;
+  userLocation: { lat: number; lng: number } | null = null;
   
   // Locations data - loaded from API
   locations: AidListing[] = [];
@@ -47,10 +49,29 @@ export class PublicDashboardComponent implements OnInit, OnDestroy {
     // Load listings on component initialization
     this.loadListings();
     
+    // Get user location for radius filtering
+    this.getUserLocation();
+    
     // Subscribe to health check requests from header
     this.healthCheckSubscription = this.healthCheckService.healthCheckRequest$.subscribe(() => {
       this.checkHealth();
     });
+  }
+
+  getUserLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+        },
+        (error) => {
+          console.warn('Error getting user location:', error);
+        }
+      );
+    }
   }
 
   loadListings() {
@@ -139,6 +160,37 @@ export class PublicDashboardComponent implements OnInit, OnDestroy {
   
   clearAllFilters() {
     this.activeFilters = [];
+    this.activeRadiusKm = null;
+  }
+  
+  // Radius filter methods
+  toggleRadiusFilter(radiusKm: number) {
+    if (this.activeRadiusKm === radiusKm) {
+      this.activeRadiusKm = null; // Toggle off if same radius clicked
+    } else {
+      this.activeRadiusKm = radiusKm;
+    }
+  }
+  
+  isRadiusFilterActive(radiusKm: number): boolean {
+    return this.activeRadiusKm === radiusKm;
+  }
+  
+  // Calculate distance between two points using Haversine formula (in km)
+  private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = this.toRad(lat2 - lat1);
+    const dLon = this.toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.toRad(lat1)) * Math.cos(this.toRad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+  
+  private toRad(degrees: number): number {
+    return degrees * (Math.PI / 180);
   }
   
   getFilterDisplayName(filter: string): string {
@@ -147,16 +199,45 @@ export class PublicDashboardComponent implements OnInit, OnDestroy {
   
   // Get filtered locations based on active filters
   get filteredLocations(): AidListing[] {
-    if (this.activeFilters.length === 0) {
-      return this.locations;
+    let filtered = this.locations;
+
+    // Apply service filters
+    if (this.activeFilters.length > 0) {
+      filtered = filtered.filter(location => {
+        // Location must have at least one service that matches the active filters
+        return this.activeFilters.some(filter =>
+          location.services.includes(filter)
+        );
+      });
     }
 
-    return this.locations.filter(location => {
-      // Location must have at least one service that matches the active filters
-      return this.activeFilters.some(filter =>
-        location.services.includes(filter)
-      );
-    });
+    // Apply radius filter
+    if (this.activeRadiusKm !== null && this.userLocation) {
+      filtered = filtered.filter(location => {
+        if (!location.latitude || !location.longitude) {
+          return false;
+        }
+        
+        const lat = parseFloat(location.latitude);
+        const lng = parseFloat(location.longitude);
+        
+        // Skip invalid coordinates
+        if (isNaN(lat) || isNaN(lng)) {
+          return false;
+        }
+        
+        const distance = this.calculateDistance(
+          this.userLocation!.lat,
+          this.userLocation!.lng,
+          lat,
+          lng
+        );
+        
+        return distance <= this.activeRadiusKm!;
+      });
+    }
+
+    return filtered;
   }
 
   ngOnDestroy(): void {

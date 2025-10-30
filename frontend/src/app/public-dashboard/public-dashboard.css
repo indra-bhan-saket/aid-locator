@@ -59,6 +59,38 @@
   line-height: 1;
 }
 
+/* Radius Filter Buttons - Same style as service filters */
+.filter-btn.radius-filter {
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  color: #6c757d;
+}
+
+.filter-btn.radius-filter:hover:not(:disabled) {
+  background-color: #f8f9fa;
+  border-color: #adb5bd;
+  color: #495057;
+}
+
+.filter-btn.radius-filter.active {
+  background-color: #000;
+  border-color: #000;
+  color: white;
+}
+
+.filter-btn.radius-filter.active:hover {
+  background-color: #333;
+  border-color: #333;
+}
+
+.filter-btn.radius-filter:disabled {
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+  color: #adb5bd;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 /* Services Section */
 .services-section .card {
   border-radius: 12px;

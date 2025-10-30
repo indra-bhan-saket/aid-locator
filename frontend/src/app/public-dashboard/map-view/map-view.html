@@ -74,6 +74,9 @@
                   {{ selectedLocation.capacity }}
                 </p>
                 <p class="info-description">{{ selectedLocation.description }}</p>
+                <a [href]="getGoogleMapsUrl(selectedLocation)" target="_blank" class="maps-link">
+                  Open in Google Maps →
+                </a>
               </div>
             }
           </map-info-window>

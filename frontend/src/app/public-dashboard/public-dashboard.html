@@ -59,19 +59,67 @@
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h5 class="card-title mb-1 fw-bold">Filter Services</h5>
-              <small class="text-muted">{{ activeFilters.length }} filter(s) active</small>
+              <small class="text-muted">{{ activeFilters.length }} service filter(s) active{{ activeRadiusKm ? ', ' + activeRadiusKm + 'km radius' : '' }}</small>
             </div>
             <button 
               type="button" 
               class="btn btn-outline-secondary btn-sm"
               (click)="clearAllFilters()"
-              [disabled]="activeFilters.length === 0">
+              [disabled]="activeFilters.length === 0 && activeRadiusKm === null">
               Clear All
             </button>
           </div>
           
-          <!-- Filter buttons -->
-          <div class="filter-buttons d-flex flex-wrap gap-2">
+          <!-- Radius Filter Section -->
+          <div class="mb-3">
+            <h6 class="fw-semibold mb-2" style="font-size: 0.9rem;">Filter by Distance</h6>
+            <div class="d-flex flex-wrap gap-2">
+              <button 
+                type="button" 
+                class="btn filter-btn radius-filter"
+                [class.active]="isRadiusFilterActive(2)"
+                (click)="toggleRadiusFilter(2)"
+                [disabled]="!userLocation">
+                <span class="filter-icon me-2">📍</span>
+                2km
+              </button>
+              
+              <button 
+                type="button" 
+                class="btn filter-btn radius-filter"
+                [class.active]="isRadiusFilterActive(5)"
+                (click)="toggleRadiusFilter(5)"
+                [disabled]="!userLocation">
+                <span class="filter-icon me-2">📍</span>
+                5km
+              </button>
+              
+              <button 
+                type="button" 
+                class="btn filter-btn radius-filter"
+                [class.active]="isRadiusFilterActive(10)"
+                (click)="toggleRadiusFilter(10)"
+                [disabled]="!userLocation">
+                <span class="filter-icon me-2">📍</span>
+                10km
+              </button>
+            </div>
+            @if (!userLocation) {
+              <small class="text-muted d-block mt-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                Enable location access to use distance filters
+              </small>
+            }
+          </div>
+          
+          <!-- Service Filters Section -->
+          <div>
+            <h6 class="fw-semibold mb-2" style="font-size: 0.9rem;">Filter by Services</h6>
+            <div class="filter-buttons d-flex flex-wrap gap-2">
             <button 
               type="button" 
               class="btn filter-btn"
@@ -143,6 +191,7 @@
               <span class="filter-icon me-2">📶</span>
               Free Wi-Fi
             </button>
+          </div>
           </div>
         </div>
       </div>

@@ -76,6 +76,21 @@
   line-height: 1.4;
 }
 
+.maps-link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: #0d6efd;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.maps-link:hover {
+  color: #0b5ed7;
+  text-decoration: underline;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .map-placeholder {
